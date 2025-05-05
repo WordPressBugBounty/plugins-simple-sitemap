@@ -92,7 +92,7 @@ class Enqueue_Scripts {
         $this->new_features_arr = $new_features_arr;
         $this->plugin_data = $plugin_data;
         $this->custom_plugin_data = $custom_plugin_data;
-        $this->plugin_version = get_plugin_data( $module_roots['file'] )['Version'];
+        $this->plugin_version = $custom_plugin_data->plugin_data['Version'];
         $this->enq_pfx = 'simple-sitemap';
         $this->plugin_settings_prefix = 'simple_sitemap';
         // Scripts for plugin settings page.

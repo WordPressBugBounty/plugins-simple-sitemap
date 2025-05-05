@@ -23,7 +23,7 @@ class Localize {
 
 		$this->module_roots = $module_roots;
 
-		add_action( 'plugins_loaded', array( &$this, 'localize_plugin' ) );
+		add_action( 'init', array( &$this, 'localize_plugin' ) );
 	}
 
 	/**

@@ -230,7 +230,8 @@ class Simple_Sitemap_Group_Shortcode {
 				'number'  => $num_terms,
 			);
 
-			$terms = get_terms( $args['tax'], $term_attr );
+			//$terms = get_terms( $args['tax'], $term_attr );
+			$terms = get_terms( $args['tax'] );
 			foreach ( $terms as $term ) {
 
 				if ( apply_filters( '_simple_sitemap_group_include_exclude_terms', false, strtolower( $term->slug ), $args ) ) {

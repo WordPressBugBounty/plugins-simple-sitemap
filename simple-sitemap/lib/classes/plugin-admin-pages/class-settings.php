@@ -127,7 +127,7 @@ class Settings {
         // enable custom menu ordering.
         add_action( 'admin_notices', function () {
             // Check to see if user clicked on the reset options button and verify nonce.
-            if ( isset( $_POST['reset_options'] ) && isset( $_POST['simple_sitemap_reset_nonce'] ) && wp_verify_nonce( $_POST['simple_sitemap_reset_nonce'], 'simple_sitemap_reset_action' ) ) {
+            if ( isset( $_POST['reset_options'] ) && isset( $_POST['simple_sitemap_reset_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['simple_sitemap_reset_nonce'] ) ), 'simple_sitemap_reset_action' ) ) {
                 // Display update notice here.
                 ?>
 					<div class="notice notice-success is-dismissible">
@@ -683,7 +683,10 @@ class Settings {
      * @return string Current URL.
      */
     public static function current_url() {
-        return (( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' )) . '://' . wp_unslash( $_SERVER['HTTP_HOST'] ) . wp_unslash( $_SERVER['REQUEST_URI'] );
+        $protocol = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' );
+        $host = ( isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '' );
+        $uri = ( isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
+        return $protocol . '://' . $host . $uri;
     }
 
     /**

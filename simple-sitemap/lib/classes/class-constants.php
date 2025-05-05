@@ -62,7 +62,7 @@ class Constants {
 		// START - EDIT CONSTANTS
 		// **********************
 
-		$this->plugin_data            = get_plugin_data( $this->module_roots['file'] );
+		$this->plugin_data            = get_plugin_data( $this->module_roots['file'], false, false );
 		$this->freemius_slug          = ss_fs()->get_slug();
 		$this->main_menu_label        = 'Simple Sitemap';
 		$this->plugin_slug            = 'simple-sitemap-menu';
