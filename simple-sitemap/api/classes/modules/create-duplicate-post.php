@@ -50,24 +50,23 @@ class Create_Duplicate_Post_FW
    * @return new_post_id
    */
   public function create_duplicate_post( $post_data ) {
-    global $wpdb;
     $old_post_id = $post_data->ID;
     $new_post_author = wp_get_current_user();
     $new_post_author_id = $new_post_author->ID;
     $new_post_status = "publish";
     $new_post_date = $post_data->post_date;
     $new_duplicate_post_args = array(
-      'menu_order'            => $post_data->menu_order ? $menu_order : "",
-      'comment_status'        => $post_data->comment_status,
-      'ping_status'           => $post_data->ping_status,
-      'post_author'           => $new_post_author_id,
+      'menu_order'            => $post_data->menu_order ? $post_data->menu_order : "",
+      'comment_status'        => 'closed',
+      'ping_status'           => 'closed',
+      'post_author'           => get_current_user_id(),
       'post_content'          => $post_data->post_content ? $post_data->post_content : "" ,
       'post_content_filtered' => $post_data->post_content_filtered ? $post_data->post_content_filtered : "" ,
       'post_excerpt'          => $post_data->post_excerpt ? $post_data->post_excerpt : "",
       'post_mime_type'        => $post_data->post_mime_type,
       'post_parent'           => $post_data->post_parent ? $post_data->post_parent : "",
       'post_password'         => $post_data->post_password,
-      'post_status'           => $new_post_status,
+      'post_status'           => 'draft',
       'post_title'            => $post_data->post_title . " (Copy)",
       'post_type'             => $post_data->post_type,
       'post_name'             => $post_data->post_name,
@@ -85,12 +84,14 @@ class Create_Duplicate_Post_FW
      * duplicate all post meta.
      */
     $post_meta_info = get_post_meta( $old_post_id );
-    if ( count( $post_meta_info ) != 0 ) {
-      foreach ( $post_meta_info as $meta_key => $meta_info ) {
-        if( $meta_key == '_wp_old_slug' ) continue;
-        $meta_value = addslashes( $meta_info [0]);
-        $old_post_meta_value = get_post_meta( $old_post_id, $meta_key, $meta_value );
-        update_post_meta( $new_post_id, $meta_key, $old_post_meta_value );
+    if ( ! empty( $post_meta_info ) ) {
+      foreach ( $post_meta_info as $meta_key => $meta_values ) { // $meta_values is an array of values for the key
+        if ( $meta_key == '_wp_old_slug' ) { // Skip this specific meta key
+          continue;
+        }
+        foreach ( $meta_values as $meta_value ) {
+          add_post_meta( $new_post_id, $meta_key, $meta_value );
+        }
       }
     }
     return $new_post_id;
@@ -106,14 +107,27 @@ class Create_Duplicate_Post_FW
   public function duplicate_admin_bar_custom_link() {
     global $wp_admin_bar, $typenow;
     $current_object = get_queried_object();
-    if ( is_admin() && isset( $_GET['post'] ) && $typenow == $this->custom_plugin_data->cpt_slug ){
-      $post_id = $_GET['post'];
-      $post_date = get_post($post_id);
-      if( !is_null($post_date) ) {
+
+    if ( is_admin() && isset( $_GET['post'] ) && !empty($typenow) && $typenow == $this->custom_plugin_data->cpt_slug ){
+      $post_id = intval($_GET['post']);
+      $post_to_duplicate = get_post($post_id);
+
+      if ( !$post_to_duplicate ) {
+        return;
+      }
+
+      $post_type_object = get_post_type_object( $post_to_duplicate->post_type );
+      if ( !$post_type_object || 
+           !current_user_can( $post_type_object->cap->create_posts ) || 
+           !current_user_can( $post_type_object->cap->publish_posts ) ) { // Check create and publish capabilities
+        return;
+      }
+
+      if( !is_null($post_to_duplicate) ) { // Redundant check, $post_to_duplicate is already checked
         $wp_admin_bar->add_menu(
           array(
             'id'    => 'duplicate-' . $this->custom_plugin_data->plugin_cpt_slug . '-cpt',
-            'title' => $this->custom_plugin_data->duplicate_post_label,
+            'title' => esc_attr($this->custom_plugin_data->duplicate_post_label),
             'href'  => $this->duplicate_create_link( $post_id )
           )
         );
@@ -129,20 +143,35 @@ class Create_Duplicate_Post_FW
    * @return wp_redirect on post page with new duplicated post
    */
   public function add_duplicate_as_new_post() {
-    global $wpdb;
-    if ( ! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'add_duplicate_as_new_post' == $_REQUEST['action'] ) ) ) {
-      wp_die('No post to duplicate has been supplied!');
+    // CSRF / Nonce check - Rejected if the nonce is missing/invalid.
+    check_admin_referer( 'wpgo_plugins_duplicate_post', 'wpgo_plugins_duplicate_nonce' );
+
+    // Input validation.
+    if ( empty( $_REQUEST['post'] ) ) {
+        wp_die( __( 'No post supplied.', 'simple-sitemap' ), 400 );
+    }
+    $post_id = absint( $_REQUEST['post'] );
+
+    // Permission (Broken-Access-Control fix).
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        wp_die( __( 'You are not allowed to duplicate this post.', 'simple-sitemap' ), 403 );
     }
 
-    // Get the original post
-    $post_id = ( isset( $_GET['post'] ) ? $_GET['post'] : $_POST['post'] );
-    $post_data = get_post( $post_id );
-    // Copy the post and insert it
-    if ( isset( $post_data ) && $post_data != null ) {
-      $new_id = $this->create_duplicate_post( $post_data );
-      wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) ) ;
-      exit;
+    // Fetch and duplicate
+    $original = get_post( $post_id );
+    if ( ! $original ) {
+        wp_die( __( 'Original post not found.', 'simple-sitemap' ), 404 );
     }
+
+    // Create duplicate post and error handling.
+    $new_id = $this->create_duplicate_post( $original );
+    if ( is_wp_error( $new_id ) ) {
+        wp_die( $new_id->get_error_message(), 500 );
+    }
+
+    // Redirect to newly created post.
+    wp_safe_redirect( get_edit_post_link( $new_id, 'raw' ) );
+    exit;
   }
 
   /**
@@ -155,8 +184,16 @@ class Create_Duplicate_Post_FW
   public function make_duplicate_link_row( $actions, $post_data ) {
     global $wp_admin_bar, $typenow;
     $title = _draft_or_post_title( $post_data );
-    if ( current_user_can('edit_posts') && $this->custom_plugin_data->cpt_slug==$typenow && $post_data->post_status!='trash' ) {
-      $actions['add_duplicate_as_new_post'] = '<a href="' .$this->duplicate_create_link( $post_data->ID). '" title="'.$this->custom_plugin_data->duplicate_post_label.'" rel="permalink">'.esc_html__( 'Duplicate' ) .'</a>';
+
+    if ( $this->custom_plugin_data->cpt_slug == $typenow && $post_data->post_status != 'trash' ) {
+      $post_type_object = get_post_type_object( $post_data->post_type );
+
+      // Check if user can create and publish posts of this type
+      if ( $post_type_object && 
+           current_user_can( $post_type_object->cap->create_posts ) &&
+           current_user_can( $post_type_object->cap->publish_posts ) ) {
+        $actions['add_duplicate_as_new_post'] = '<a href="' .$this->duplicate_create_link( $post_data->ID). '" title="'.esc_attr($this->custom_plugin_data->duplicate_post_label).'" rel="permalink">'.esc_html__( 'Duplicate' ) .'</a>';
+      }
     }
     return $actions;
   }

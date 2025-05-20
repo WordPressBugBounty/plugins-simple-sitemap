@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: seo sitemap, html, sitemap, html sitemap, responsive sitemap
 Requires at least: 6.0
 Tested up to: 6.8
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ The latest version now also includes a responsive tabbed layout option that look
 
 = KEEPS ON GETTING BETTER =
 
-Simple Sitemap is a well-established plugin and has been consistently developed and maintained for several years. It's currently used on over 90,000 websites.
+Simple Sitemap is a well-established plugin and has been consistently developed and maintained for several years. It's currently used on over 75,000 websites.
 
 The big news is that we've recently completely overhauled the plugin and added some great new features. Two dedicated editor blocks have been added that allow you to add and edit your sitemap directly inside the new WordPress editor codenamed <a href="https://wordpress.org/gutenberg/" target="_blank">Gutenberg</a>. You no longer need to leave the editor to preview your sitemap like you do when using shortcodes.
 
@@ -86,7 +86,7 @@ Also, each sitemap has a unique ID assigned to it which is used to namespace the
  
 It contains more blocks, more shortcodes, and plenty of user interface controls for fine-grained control over exactly what's included in the sitemap and how it's rendered. This added flexibility allows you to generate almost any type of sitemap you can think of!
 
-In particular the following <a href="https://wpgoplugins.com/plugins/simple-sitemap-pro/" target="_blank">additonal features</a> are available.
+In particular the following <a href="https://wpgoplugins.com/plugins/simple-sitemap-pro/" target="_blank">additional features</a> are available.
 
 * Add any custom post types to a sitemap.
 * List posts sorted by any custom taxonomies.
@@ -158,6 +158,10 @@ No. This plugin is for generating an HTML sitemap only.
 12. Show sitemap in a horizontal list separated by any character(s). [Pro]
 
 == Changelog ==
+= 3.6.1 - May 20, 2025 =
+
+* [fix] Updated nonce checks on post duplication feature.
+
 = 3.6.0 - May 7, 2025 =
 
 * [fix] Localization issues.
