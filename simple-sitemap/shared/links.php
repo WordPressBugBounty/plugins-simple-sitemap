@@ -10,7 +10,7 @@ class Links {
 	/**
 	 * Common root paths/directories.
 	 *
-	 * @var $module_roots
+	 * @var array<string, string>
 	 */
 	protected $module_roots;
 
@@ -61,5 +61,4 @@ class Links {
 
 		return $links;
 	}
-
 } /* End class definition */

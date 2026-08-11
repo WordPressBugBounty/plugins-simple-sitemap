@@ -8,38 +8,38 @@ namespace WPGO_Plugins\Simple_Sitemap;
 class Constants {
 
 	public $plugin_data;
-    public $freemius_slug;
-    public $main_menu_label;
-    public $plugin_slug;
-    public $plugin_cpt_slug;
-    public $menu_type;
-    public $cpt_slug;
-    public $css_prefix;
-    public $filter_prefix;
-    public $db_option_prefix;
-    public $enqueue_prefix;
-    public $plugin_settings_prefix;
-    public $donation_link;
-    public $duplicate_post_label;
+	public $freemius_slug;
+	public $main_menu_label;
+	public $plugin_slug;
+	public $plugin_cpt_slug;
+	public $menu_type;
+	public $cpt_slug;
+	public $css_prefix;
+	public $filter_prefix;
+	public $db_option_prefix;
+	public $enqueue_prefix;
+	public $plugin_settings_prefix;
+	public $donation_link;
+	public $duplicate_post_label;
 	public $is_premium;
-    public $parent_slug;
-    public $settings_page_hook;
-    public $settings_page_hook_top;
-    public $settings_page_hook_sub;
-    public $settings_pages;
-    public $url_prefix;
-    public $main_settings_url;
-    public $welcome_url;
-    public $new_features_url;
-    public $freemius_upgrade_url;
-    public $freemius_discount_upgrade_url;
-    public $contact_us_url;
-    public $admin_url;
+	public $parent_slug;
+	public $settings_page_hook;
+	public $settings_page_hook_top;
+	public $settings_page_hook_sub;
+	public $settings_pages;
+	public $url_prefix;
+	public $main_settings_url;
+	public $welcome_url;
+	public $new_features_url;
+	public $freemius_upgrade_url;
+	public $freemius_discount_upgrade_url;
+	public $contact_us_url;
+	public $admin_url;
 
 	/**
 	 * Common root paths/directories.
 	 *
-	 * @var $module_roots
+	 * @var array<string, string>
 	 */
 	protected $module_roots;
 
@@ -67,7 +67,7 @@ class Constants {
 		$this->main_menu_label        = 'Simple Sitemap';
 		$this->plugin_slug            = 'simple-sitemap-menu';
 		$this->plugin_cpt_slug        = 'simple-sitemap'; // use this as plugin (menu) slug if using CPT as parent menu.
-		$this->menu_type              = 'top'; // top|top-cpt|sub.
+		$this->menu_type              = (string) apply_filters( 'simple_sitemap_menu_type', 'top' ); // top|top-cpt|sub.
 		$this->cpt_slug               = ''; // same one used in register_post_type().
 		$this->css_prefix             = 'simple-sitemap';
 		$this->filter_prefix          = 'simple_sitemap';

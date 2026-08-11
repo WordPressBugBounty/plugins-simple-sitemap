@@ -11,11 +11,36 @@ body .simple-sitemap-menu li {
 	padding: 0;
 }
 
-/* This rule seems necessary when the Gutenberg plugin isn't installed. */
-.editor-styles-wrapper .simple-sitemap-container ul,
-.editor-styles-wrapper .simple-sitemap-container ol {
-	margin: 0 0 0 1.2em;
-	padding: 0;
+.simple-sitemap-pagination .page-numbers {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	list-style: none;
+	padding-inline-start: 0;
+}
+
+.simple-sitemap-child-page-image {
+	display: inline-flex;
+	margin-inline-end: 0.5em;
+	vertical-align: middle;
+}
+
+.simple-sitemap-product-category + .simple-sitemap-product-category {
+	margin-block-start: 1.5em;
+}
+
+.simple-sitemap-product-item {
+	margin-block-end: 0.5em;
+}
+
+.simple-sitemap-product-image {
+	display: inline-block;
+	margin-inline-end: 0.5em;
+	vertical-align: middle;
+}
+
+.simple-sitemap-product-meta {
+	font-size: 0.9em;
 }
 
 .simple-sitemap-wrap:not(:first-of-type) {
@@ -24,19 +49,9 @@ body .simple-sitemap-menu li {
 
 .simple-sitemap-container .excerpt {
 	font-size: 0.85em;
-
-	/*
-	line-height: 17px;
-	 margin-top: -2px;
-	color: #555;
-	margin-bottom: -5px;
-	padding: 3px 3px 0 0;
-	*/
 }
 
 .simple-sitemap-container span.excerpt {
-
-	/* margin-left: -9px; */
 	position: relative;
 	left: 8px;
 }
@@ -121,8 +136,6 @@ body .simple-sitemap-menu li {
 
 .simple-sitemap-container .no-posts {
 	font-style: italic;
-
-	/* margin: 2em 1em 2em 3em; */
 }
 
 .simple-sitemap-container.tab-enabled .no-posts {
@@ -130,15 +143,9 @@ body .simple-sitemap-menu li {
 	margin: 2em 1em 2em 2em;
 }
 
-/*.simple-sitemap-container.tab-enabled {
-  max-width: 650px;
-  width: 80%;
-  margin: 0 auto;
-}*/
-
 .simple-sitemap-container.tab-enabled .post-type {
 	margin: 0;
-	font-weight: normal;
+	font-weight: 400;
 }
 
 .simple-sitemap-container.tab-enabled label {
@@ -150,17 +157,37 @@ body .simple-sitemap-menu li {
 	border-radius: 4px 4px 0 0;
 }
 
-.simple-sitemap-container.tab-enabled input {
-	display: none;
+.simple-sitemap-tab-button {
+	appearance: none;
+	background: transparent;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	padding: 0;
 }
 
-/*.simple-sitemap-container.tab-enabled input:checked + label {
-  background-color: #de5737;
+.simple-sitemap-tab-button:focus-visible {
+	outline: 2px solid currentcolor;
+	outline-offset: 2px;
 }
-.simple-sitemap-container.tab-enabled input:checked + label > * {
-  color: #ffffff;
+
+.simple-sitemap-container.tab-enabled .simple-sitemap-tab-control {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
-*/
+
+.simple-sitemap-container.tab-enabled .simple-sitemap-tab-control:focus-visible + label {
+	outline: 2px solid currentcolor;
+	outline-offset: 2px;
+}
 
 .simple-sitemap-container.tab-enabled input[id^="simple-sitemap-tab-1"]:checked ~ .simple-sitemap-content .simple-sitemap-tab-1,
 .simple-sitemap-container.tab-enabled input[id^="simple-sitemap-tab-2"]:checked ~ .simple-sitemap-content	.simple-sitemap-tab-2,
@@ -182,136 +209,7 @@ body .simple-sitemap-menu li {
 
 .simple-sitemap-container.tab-enabled .panel {
 	width: 100%;
-
-	/*
-	padding: 25px 20px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	*/
 	display: none;
 	border: 1px solid #ddd;
-
-	/* border-top: 4px solid #de5737; */
 	border-radius: 0 0 4px 4px;
 }
-
-/*@media only screen and (max-width: 500px) {
-  .simple-sitemap-container.tab-enabled label {
-    width: 100%;
-    border-radius: 0;
-  }
-  .simple-sitemap-container.tab-enabled label[for^="simple-sitemap-tab-1"] {
-    border-radius: 4px 4px 0 0;
-  }
-}*/
-
-/* react-select */
-.components-panel__row.simple-sitemap .react-select-container {
-	min-width: 120px;
-}
-
-/* Labels */
-
-.label-wide label {
-	max-width: 100%;
-}
-
-/* Tab colors */
-
-.components-panel .tab-colors {
-	display: block;
-}
-
-.components-panel .series-color {
-	display: inline-block;
-	margin: 0 0 0 5px;
-}
-
-.components-panel .series-color:first-of-type {
-	margin: 0;
-}
-
-.components-panel .series-color,
-.components-panel .series-color > div {
-	width: 22px;
-	height: 22px;
-}
-
-.components-panel .series-color > div {
-	border-radius: 0;
-	border: 1px solid #ccc;
-}
-
-/* Inspector panel: @todo these need moving to a block admin only stylesheet  */
-
-/* disabled styles for inspector panel elements */
-.components-panel__row.simple-sitemap .disabled .components-base-control__help {
-	color: rgb(232, 119, 119);
-}
-
-.edit-post-settings-sidebar__panel-block .components-panel__body .components-panel__row.simple-sitemap .components-base-control
-/*.edit-post-settings-sidebar__panel-block .components-panel__body .components-panel__row.simple-sitemap .components-base-control:last-child*/ {
-	margin-bottom: 0;
-}
-
-.components-panel__row.simple-sitemap .components-base-control .components-base-control__field {
-	margin-bottom: 8px;
-}
-
-.components-panel__row.simple-sitemap .components-base-control .components-base-control__help {
-	margin-bottom: 4px;
-}
-
-.components-panel__row.simple-sitemap.order {
-	justify-content: start;
-	align-items: start;
-}
-
-.components-panel__row.simple-sitemap.order .components-base-control:first-child {
-	margin-right: 1em;
-}
-
-.components-panel__row.simple-sitemap.general-chk {
-	margin-top: 0;
-}
-
-/*.components-panel__row.simple-sitemap > .components-base-control {
-  margin-bottom: 0;
-}*/
-
-/*.edit-post-settings-sidebar__panel-block .components-panel__body .series-checkboxes .components-base-control {
-  margin-bottom: 0;
-  padding: 0;
-}
-.edit-post-settings-sidebar__panel-block .components-panel__body .series-checkboxes .components-base-control input {
-  margin-right: 5px;
-}*/
-
-/* test we need all styles below */
-
-/*
-.components-panel .series-checkboxes {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-/*
-.components-panel .series-checkboxes .series-checkbox {
-  width: 28px;
-  height: 18px;
-  margin: 2px 20px 0;
-  border-radius: 3px;
-}
-*/
-
-/*
-.components-panel .chart-colors-grid {
-  display: grid;
-  grid-gap: 2px;
-  grid-template-columns: repeat(auto-fit, minmax(20px, 20px));
-}
-.components-panel .chart-colors-grid li {
-  margin: 0;
-}
-*/

@@ -6,234 +6,208 @@ namespace WPGO_Plugins\Simple_Sitemap;
  * Enqueue plugin scripts.
  */
 class Enqueue_Scripts {
-    /**
-     * Common root paths/directories.
-     *
-     * @var $module_roots
-     */
-    protected $module_roots;
 
-    /**
-     * An object of API utilities class.
-     *
-     * @var object
-     */
-    protected $utilities_fw;
+	/**
+	 * Common root paths/directories.
+	 *
+	 * @var array<string, string>
+	 */
+	protected $module_roots;
 
-    /**
-     * Plugin framework new features.
-     *
-     * @var mixed
-     */
-    protected $new_features_arr;
+	/**
+	 * Plugin utility instance.
+	 *
+	 * @var Utility
+	 */
+	protected $utility;
 
-    /**
-     * Plugin data.
-     *
-     * @var array
-     */
-    protected $plugin_data;
+	/**
+	 * New feature definitions.
+	 *
+	 * @var mixed
+	 */
+	protected $new_features_arr;
 
-    /**
-     * Custom plugin data.
-     *
-     * @var array
-     */
-    protected $custom_plugin_data;
+	/**
+	 * Plugin data.
+	 *
+	 * @var array
+	 */
+	protected $plugin_data;
 
-    /**
-     * Plugin version.
-     *
-     * @var string
-     */
-    protected $plugin_version;
+	/**
+	 * Custom plugin data.
+	 *
+	 * @var Constants
+	 */
+	protected $custom_plugin_data;
 
-    /**
-     * Enqueue prefix.
-     *
-     * @var string
-     */
-    protected $enq_pfx;
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
+	protected $plugin_version;
 
-    /**
-     * Plugin settings prefix.
-     *
-     * @var string
-     */
-    protected $plugin_settings_prefix;
+	/**
+	 * Enqueue prefix.
+	 *
+	 * @var string
+	 */
+	protected $enq_pfx;
 
-    /**
-     * Dependencies for JavaScripts.
-     *
-     * @var array
-     */
-    protected $js_deps;
+	/**
+	 * Plugin settings prefix.
+	 *
+	 * @var string
+	 */
+	protected $plugin_settings_prefix;
 
-    /**
-     * Main class constructor.
-     *
-     * @global type $pagenow
-     * @param array  $module_roots Root plugin path/dir.
-     * @param object $utilities_fw An object of API utilities class.
-     * @param mixed  $new_features_arr Plugin framework new features.
-     * @param array  $plugin_data Plugin data.
-     * @param array  $custom_plugin_data Custom plugin data.
-     */
-    public function __construct(
-        $module_roots,
-        $utilities_fw,
-        $new_features_arr,
-        $plugin_data,
-        $custom_plugin_data
-    ) {
-        global $pagenow;
-        $this->module_roots = $module_roots;
-        $this->utilities_fw = $utilities_fw;
-        $this->new_features_arr = $new_features_arr;
-        $this->plugin_data = $plugin_data;
-        $this->custom_plugin_data = $custom_plugin_data;
-        $this->plugin_version = $custom_plugin_data->plugin_data['Version'];
-        $this->enq_pfx = 'simple-sitemap';
-        $this->plugin_settings_prefix = 'simple_sitemap';
-        // Scripts for plugin settings page.
-        add_action( 'admin_enqueue_scripts', array(&$this, 'enqueue_admin_settings_scripts') );
-        add_action(
-            'admin_enqueue_scripts',
-            array(&$this, 'enqueue_admin_scripts'),
-            9,
-            2
-        );
-        // Enqueue frontend/editor scripts.
-        add_action( 'enqueue_block_assets', array(&$this, 'enqueue_assets') );
-        add_action( 'enqueue_block_editor_assets', array(&$this, 'enqueue_block_editor_scripts') );
-        // $this->js_deps = [ 'wp-element', 'wp-i18n', 'wp-hooks', 'wp-components', 'wp-blocks', 'wp-editor', 'wp-compose' ];
-        $this->js_deps = array(
-            'wp-plugins',
-            'wp-element',
-            'wp-i18n',
-            'wp-api-request',
-            'wp-data',
-            'wp-hooks',
-            'wp-plugins',
-            'wp-components',
-            'wp-blocks',
-            'wp-compose'
-        );
-        if ( 'widgets.php' !== $pagenow ) {
-            $this->js_deps = array_merge( $this->js_deps, array('wp-edit-post', 'wp-editor') );
-        }
-        add_filter( 'should_load_separate_core_block_assets', '__return_true' );
-    }
+	/**
+	 * Main class constructor.
+	 *
+	 * @param array  $module_roots Root plugin path/dir.
+	 * @param Utility $utility Plugin utility instance.
+	 * @param mixed  $new_features_arr Plugin new features.
+	 * @param array  $plugin_data Plugin data.
+	 * @param Constants $custom_plugin_data Custom plugin data.
+	 */
+	public function __construct( $module_roots, $utility, $new_features_arr, $plugin_data, $custom_plugin_data ) {
+		$this->module_roots           = $module_roots;
+		$this->utility                = $utility;
+		$this->new_features_arr       = $new_features_arr;
+		$this->plugin_data            = $plugin_data;
+		$this->custom_plugin_data     = $custom_plugin_data;
+		$this->plugin_version         = $custom_plugin_data->plugin_data['Version'];
+		$this->enq_pfx                = 'simple-sitemap';
+		$this->plugin_settings_prefix = 'simple_sitemap';
 
-    /**
-     * Scripts for all admin pages. This is necessary as we need to modify the main admin menu from JS.
-     *
-     * @param string $hook Passed as parameter.
-     */
-    public function enqueue_admin_scripts( $hook ) {
-        $admin_settings_js = $this->utilities_fw->get_enqueue_version( '/lib/assets/js/update-menu.js', $this->custom_plugin_data->plugin_data['Version'] );
-        // Register and localize the script with new data.
-        // wp_register_script( $this->enq_pfx . '-update-menu-js', $admin_settings_js['uri'], array( 'wpgo-all-admin-pages-fw-js' ), $admin_settings_js['ver'], true );
-        wp_register_script(
-            $this->enq_pfx . '-update-menu-js',
-            $admin_settings_js['uri'],
-            array(),
-            $admin_settings_js['ver'],
-            true
-        );
-        $data = array(
-            'admin_url'       => admin_url(),
-            'nav_status'      => SITEMAP_FREEMIUS_NAVIGATION,
-            'hook'            => $hook,
-            'menu_type'       => $this->custom_plugin_data->menu_type,
-            'main_menu_label' => $this->custom_plugin_data->main_menu_label,
-            'plugin_prefix'   => $this->enq_pfx,
-        );
-        wp_localize_script( $this->enq_pfx . '-update-menu-js', $this->custom_plugin_data->plugin_settings_prefix . '_admin_menu_data', $data );
-        wp_enqueue_script( $this->enq_pfx . '-update-menu-js' );
-    }
+		// Scripts for plugin settings page.
+		add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_admin_settings_scripts' ) );
+		// Enqueue frontend/editor scripts.
+		add_action( 'init', array( &$this, 'enqueue_assets' ), 5 );
+		add_action( 'init', array( &$this, 'register_block_editor_assets' ), 5 );
+		add_action( 'enqueue_block_editor_assets', array( &$this, 'enqueue_block_editor_scripts' ) );
 
-    /**
-     * Enqueue front end and editor JavaScript and CSS assets.
-     */
-    public function enqueue_assets() {
-        $simple_sitemap_css = $this->utilities_fw->get_enqueue_version( '/lib/assets/css/simple-sitemap.css', $this->plugin_version );
-        wp_register_style(
-            'simple-sitemap-css',
-            $simple_sitemap_css['uri'],
-            array(),
-            $simple_sitemap_css['ver']
-        );
-    }
+		add_filter( 'should_load_separate_core_block_assets', '__return_true' );
+	}
 
-    /**
-     * Scripts for plugin settings page only.
-     *
-     * @param string $hook Page hook name.
-     * @return void
-     */
-    public function enqueue_admin_settings_scripts( $hook ) {
-        if ( 'toplevel_page_simple-sitemap-menu' === $hook ) {
-            $ss_settings_css = $this->utilities_fw->get_enqueue_version( '/lib/assets/css/admin-settings.css', $this->plugin_version );
-            $ss_settings_js = $this->utilities_fw->get_enqueue_version( '/lib/assets/js/simple-sitemap-admin.js', $this->plugin_version );
-            wp_enqueue_style(
-                'simple-sitemap-settings-welcome-css',
-                $ss_settings_css['uri'],
-                array(),
-                $ss_settings_css['ver']
-            );
-            wp_enqueue_script(
-                'simple-sitemap-settings-welcome-js',
-                $ss_settings_js['uri'],
-                array(),
-                $ss_settings_js['ver']
-            );
-        }
-        // Having to do it this way as for the welcome page the hook has the numbered icon number included (when rendered).
-        if ( strpos( $hook, '_page_simple-sitemap-menu-welcome' ) !== false ) {
-            // if ( 'simple-sitemap_page_simple-sitemap-menu-welcome' === $hook ) {
-            $ss_settings_css = $this->utilities_fw->get_enqueue_version( '/lib/assets/css/admin-settings.css', $this->plugin_version );
-            $ss_settings_js = $this->utilities_fw->get_enqueue_version( '/lib/assets/js/simple-sitemap-admin.js', $this->plugin_version );
-            wp_enqueue_style(
-                'simple-sitemap-settings-css',
-                $ss_settings_css['uri'],
-                array(),
-                $ss_settings_css['ver']
-            );
-            // wp_enqueue_script( 'simple-sitemap-settings-js', $ss_settings_js['uri'], array(), $ss_settings_js['ver'] );
-        }
-    }
+	/**
+	 * Enqueue front end and editor JavaScript and CSS assets.
+	 */
+	public function enqueue_assets() {
+		$simple_sitemap_css = $this->utility->get_enqueue_version( '/lib/assets/css/simple-sitemap.css', $this->plugin_version );
+		wp_register_style( 'simple-sitemap-css', $simple_sitemap_css['uri'], array(), $simple_sitemap_css['ver'] );
 
-    /**
-     * Add scripts for block editor only.
-     **/
-    public function enqueue_block_editor_scripts() {
-        $block_editor_js = $this->utilities_fw->get_enqueue_version( '/lib/block_assets/js/blocks.editor.js', $this->plugin_version );
-        $deps = $this->js_deps;
-        // Block editor script.
-        wp_register_script(
-            $this->enq_pfx . '-block-editor-js',
-            $block_editor_js['uri'],
-            $deps,
-            $block_editor_js['ver'],
-            true
-        );
-        $data = array(
-            'is_premium'           => ss_fs()->is_premium(),
-            'can_use_premium_code' => ss_fs()->can_use_premium_code(),
-        );
-        wp_localize_script( $this->enq_pfx . '-block-editor-js', $this->plugin_settings_prefix . '_editor_data', $data );
-        wp_enqueue_script( $this->enq_pfx . '-block-editor-js' );
-        $block_editor_css = $this->utilities_fw->get_enqueue_version( '/lib/assets/css/simple-sitemap-block-editor.css', $this->plugin_version );
-        // Block editor styles.
-        wp_enqueue_style(
-            'simple-sitemap-block-editor-css',
-            $block_editor_css['uri'],
-            array(),
-            $block_editor_css['ver']
-        );
-    }
+		$tabs_js = $this->utility->get_enqueue_version( '/lib/assets/js/simple-sitemap-tabs.js', $this->plugin_version );
+		wp_register_script( 'simple-sitemap-tabs', $tabs_js['uri'], array( 'wp-i18n' ), $tabs_js['ver'], true );
+	}
 
-}
+	/**
+	 * Scripts for plugin settings page only.
+	 *
+	 * @param string $hook Page hook name.
+	 * @return void
+	 */
+	public function enqueue_admin_settings_scripts( $hook ) {
+		if ( false !== strpos( $hook, 'simple-sitemap' ) ) {
+			$admin_core_css = $this->utility->get_enqueue_version( '/lib/assets/css/admin-settings-core.css', $this->plugin_version );
+			wp_enqueue_style( 'simple-sitemap-settings-core-css', $admin_core_css['uri'], array(), $admin_core_css['ver'] );
+		}
 
-/* End class definition */
+		$main_settings_hooks = array(
+			'toplevel_page_simple-sitemap-menu',
+			'settings_page_simple-sitemap-menu',
+			'simple-sitemap_page_simple-sitemap-menu',
+		);
+		if ( in_array( $hook, $main_settings_hooks, true ) ) {
+
+			$ss_settings_css = $this->utility->get_enqueue_version( '/lib/assets/css/admin-settings.css', $this->plugin_version );
+			$ss_settings_js  = $this->utility->get_enqueue_version( '/lib/assets/js/simple-sitemap-admin.js', $this->plugin_version );
+
+			wp_enqueue_style( 'simple-sitemap-settings-welcome-css', $ss_settings_css['uri'], array(), $ss_settings_css['ver'] );
+			wp_enqueue_script( 'simple-sitemap-settings-welcome-js', $ss_settings_js['uri'], array(), $ss_settings_js['ver'], true );
+		}
+
+		// Having to do it this way as for the welcome page the hook has the numbered icon number included (when rendered).
+		if ( strpos( $hook, '_page_simple-sitemap-menu-welcome' ) !== false ) {
+			// if ( 'simple-sitemap_page_simple-sitemap-menu-welcome' === $hook ) {
+			$ss_settings_css = $this->utility->get_enqueue_version( '/lib/assets/css/admin-settings.css', $this->plugin_version );
+			$ss_settings_js  = $this->utility->get_enqueue_version( '/lib/assets/js/simple-sitemap-admin.js', $this->plugin_version );
+
+			wp_enqueue_style( 'simple-sitemap-settings-css', $ss_settings_css['uri'], array(), $ss_settings_css['ver'] );
+			// wp_enqueue_script( 'simple-sitemap-settings-js', $ss_settings_js['uri'], array(), $ss_settings_js['ver'] );
+		}
+	}
+
+	/**
+	 * Register block-editor assets from build-generated dependency metadata.
+	 **/
+	public function register_block_editor_assets() {
+		$block_editor_js = $this->utility->get_enqueue_version( '/lib/block_assets/js/blocks.editor.js', $this->plugin_version );
+		$asset           = $this->get_asset_metadata( '/lib/block_assets/js/blocks.editor.asset.php' );
+		$dependencies    = $asset['dependencies'];
+
+		if ( ss_fs()->can_use_premium_code__premium_only() ) {
+			$pro_handle          = $this->enq_pfx . '-block-editor-pro-js';
+			$block_editor_pro_js = $this->utility->get_enqueue_version( '/modules/block_assets/js/block.editor.pro.js', $this->plugin_version );
+			$pro_asset           = $this->get_asset_metadata( '/modules/block_assets/js/block.editor.pro.asset.php' );
+
+			wp_register_script( $pro_handle, $block_editor_pro_js['uri'], $pro_asset['dependencies'], $pro_asset['version'], true );
+			wp_add_inline_script(
+				$pro_handle,
+				'window.simple_sitemap_pro_editor_data = ' . wp_json_encode(
+					array(
+						'has_woocommerce' => post_type_exists( 'product' ) && function_exists( 'wc_get_product' ),
+					)
+				) . ';',
+				'before'
+			);
+
+			// Pro registration filters must run before the shared blocks register.
+			$dependencies[] = $pro_handle;
+		}
+
+		// Block editor script.
+		wp_register_script( $this->enq_pfx . '-block-editor-js', $block_editor_js['uri'], array_values( array_unique( $dependencies ) ), $asset['version'], true );
+
+		$data = array(
+			'is_premium'           => ss_fs()->is_premium(),
+			'can_use_premium_code' => ss_fs()->can_use_premium_code(),
+		);
+
+		wp_localize_script( $this->enq_pfx . '-block-editor-js', $this->plugin_settings_prefix . '_editor_data', $data );
+
+		$block_editor_css = $this->utility->get_enqueue_version( '/lib/assets/css/simple-sitemap-block-editor.css', $this->plugin_version );
+
+		wp_register_style( 'simple-sitemap-block-editor-css', $block_editor_css['uri'], array(), $block_editor_css['ver'] );
+	}
+
+	/**
+	 * Enqueue registered editor assets while retaining the existing all-editor behavior.
+	 */
+	public function enqueue_block_editor_scripts() {
+		wp_enqueue_script( $this->enq_pfx . '-block-editor-js' );
+		wp_enqueue_style( 'simple-sitemap-block-editor-css' );
+
+		if ( ss_fs()->can_use_premium_code__premium_only() ) {
+			wp_enqueue_script( $this->enq_pfx . '-block-editor-pro-js' );
+		}
+	}
+
+	/**
+	 * Read build-generated WordPress script dependencies and content version.
+	 *
+	 * @param string $relative_path Asset metadata path relative to the plugin.
+	 * @return array{dependencies: array<int, string>, version: string}
+	 */
+	private function get_asset_metadata( $relative_path ) {
+		$path  = $this->module_roots['dir'] . ltrim( $relative_path, '/\\' );
+		$asset = file_exists( $path ) ? include $path : array();
+
+		return array(
+			'dependencies' => isset( $asset['dependencies'] ) && is_array( $asset['dependencies'] ) ? $asset['dependencies'] : array(),
+			'version'      => isset( $asset['version'] ) && is_string( $asset['version'] ) ? $asset['version'] : $this->plugin_version,
+		);
+	}
+} /* End class definition */
