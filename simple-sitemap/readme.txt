@@ -5,7 +5,7 @@ Tags: html sitemap, sitemap, responsive sitemap, seo sitemap, block
 Requires at least: 6.3
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.2
+Stable tag: 3.6.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,6 +133,13 @@ from deactivating the plugin under Plugins.
 6. Display the tabbed layout on the front end.
 7. Simple Sitemap Pro adds compact horizontal sitemap layouts.
 == Changelog ==
+= 3.6.3 - August 20, 2026 =
+
+* [new] Replaced the legacy welcome screen with a professional Home dashboard, guided sitemap creation, Quick Start steps, and clear Free feature actions.
+* [new] Added direct links from Pro feature cards to matching live examples and a concise feedback prompt with a Simple Sitemap feedback summary ready to send.
+* [update] Improved sitemap spacing, hierarchy, tab presentation, link contrast, and responsive readability without changing saved content or renderer markup.
+* [update] Added deterministic documentation exports and stricter Free/Pro release-package and live-demo handoff checks.
+
 = 3.6.2 - August 11, 2026 =
 
 * [update] Removed the external WP Go Plugin Framework dependency so the plugin is now fully self-contained.

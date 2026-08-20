@@ -2,6 +2,26 @@
 	{
 		"type": "new",
 		"license": "free",
+		"banner_url": "block-preview.png",
+		"version": "3.6.3",
+		"date": "20th August 2026",
+		"title": "A New Simple Sitemap Home",
+		"description": "<p style='margin:15px 0;'>Create a sitemap draft, follow the visual Quick Start, explore Free actions, jump to matching live examples, and share feedback from one focused dashboard.</p>",
+		"learn_more_url": ""
+	},
+	{
+		"type": "update",
+		"license": "pro",
+		"banner_url": "optionally-exclude-child-pages.png",
+		"version": "3.6.3",
+		"date": "20th August 2026",
+		"title": "Explore the Complete Pro Toolkit",
+		"description": "<p style='margin:15px 0;'>Licensed installs now show one comprehensive feature explorer with Pro-appropriate support, documentation, changelog, and direct live-example links.</p>",
+		"learn_more_url": "https://demo.wpgoplugins.com/simple-sitemap/"
+	},
+	{
+		"type": "new",
+		"license": "free",
 		"banner_url": "optionally-exclude-child-pages.png",
 		"version": "3.6.2",
 		"date": "11th August 2026",

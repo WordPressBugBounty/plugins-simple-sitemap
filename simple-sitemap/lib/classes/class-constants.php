@@ -120,7 +120,7 @@ class Constants {
 			),
 			'welcome'      => array(
 				'slug'      => $this->plugin_slug . '-welcome',
-				'label'     => 'Welcome to ' . $this->main_menu_label . '!',
+				'label'     => $this->main_menu_label . ' Home',
 				'css_class' => 'welcome',
 			),
 		);

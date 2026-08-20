@@ -205,14 +205,14 @@ class Settings {
 					</h1>
 					<div class="wpgo-header-btns">
 						<a class="plugin-btn" href="<?php echo esc_url( $this->custom_plugin_data->welcome_url ); ?>#getting-started">Start Here<span style="width:15px;height:15px;" class="dashicons dashicons-arrow-right-alt2"></span></a>
-						<a style="background:#f5a356;border:2px #d9914e solid;" class="plugin-btn" href="https://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/" target="_blank">Live Demo</a></span>
+						<a style="background:#f5a356;border:2px #d9914e solid;" class="plugin-btn" href="https://demo.wpgoplugins.com/simple-sitemap/" target="_blank">Live Demo</a></span>
 						<a style="background:#933c60;border:2px #6d314a solid;" class="plugin-btn" href="https://wpgoplugins.com/document/simple-sitemap-pro-documentation/" target="_blank">Plugin Docs</a>
 					</div>
 				</div>
 
 				<div class="wpgo-header-description">
 					<p class="description-txt">
-						To see what's new at a glance and how to use the plugin we recommend visiting the <a href="<?php echo esc_url( $this->custom_plugin_data->welcome_url ); ?>">About</a> plugin page. Or, why not take a look at the Simple Sitemap <a href="https://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/" target="_blank">Live Demo</a> to see plenty of sitemap examples in action.
+						To see what's new at a glance and how to use the plugin we recommend visiting the <a href="<?php echo esc_url( $this->custom_plugin_data->welcome_url ); ?>">Home</a> plugin page. Or, why not take a look at the Simple Sitemap <a href="https://demo.wpgoplugins.com/simple-sitemap/" target="_blank">Live Demo</a> to see plenty of sitemap examples in action.
 					</p>
 				</div>
 

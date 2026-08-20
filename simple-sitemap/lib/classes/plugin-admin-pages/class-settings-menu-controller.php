@@ -31,7 +31,7 @@ class Settings_Menu_Controller {
 	}
 
 	/**
-	 * Put plugin-owned pages after stable slug anchors when those entries exist.
+	 * Keep Home first and put optional plugin pages after stable slug anchors.
 	 *
 	 * Missing Freemius or plugin submenu entries are intentionally left alone.
 	 * This avoids treating array index zero as both a valid index and a sentinel.
@@ -61,9 +61,11 @@ class Settings_Menu_Controller {
 		}
 
 		if ( 'menu' === SITEMAP_FREEMIUS_NAVIGATION ) {
-			$pricing_slug = $this->plugin->freemius_slug . '-pricing';
-			$anchor_slug  = self::contains_slug( $items, $pricing_slug ) ? $pricing_slug : $this->plugin->plugin_cpt_slug . '-wp-support-forum';
-			$items        = self::move_after( $items, $this->plugin->settings_pages['welcome']['slug'], $anchor_slug );
+			$items = self::move_before(
+				$items,
+				$this->plugin->settings_pages['welcome']['slug'],
+				$this->plugin->settings_pages['settings']['slug']
+			);
 		}
 
 		$submenu[ $parent_slug ] = $items;
@@ -99,6 +101,33 @@ class Settings_Menu_Controller {
 	}
 
 	/**
+	 * Move one submenu entry immediately before another without dropping entries.
+	 *
+	 * @param array<int, array<int, mixed>> $items Menu items.
+	 * @param string                        $source_slug Slug to move.
+	 * @param string                        $anchor_slug Slug to move before.
+	 * @return array<int, array<int, mixed>> Reordered menu items.
+	 */
+	public static function move_before( $items, $source_slug, $anchor_slug ) {
+		$source_index = self::find_index( $items, $source_slug );
+		$anchor_index = self::find_index( $items, $anchor_slug );
+		if ( null === $source_index || null === $anchor_index || $source_index === $anchor_index ) {
+			return $items;
+		}
+
+		$source = $items[ $source_index ];
+		array_splice( $items, $source_index, 1 );
+		$anchor_index = self::find_index( $items, $anchor_slug );
+		if ( null === $anchor_index ) {
+			return $items;
+		}
+
+		array_splice( $items, $anchor_index, 0, array( $source ) );
+
+		return $items;
+	}
+
+	/**
 	 * Remove one optional submenu entry without changing the remaining order.
 	 *
 	 * @param array<int, array<int, mixed>> $items Menu items.
@@ -112,17 +141,6 @@ class Settings_Menu_Controller {
 		}
 
 		return $items;
-	}
-
-	/**
-	 * Determine whether a submenu contains a slug.
-	 *
-	 * @param array<int, array<int, mixed>> $items Menu items.
-	 * @param string                        $slug Menu slug.
-	 * @return bool
-	 */
-	private static function contains_slug( $items, $slug ) {
-		return null !== self::find_index( $items, $slug );
 	}
 
 	/**

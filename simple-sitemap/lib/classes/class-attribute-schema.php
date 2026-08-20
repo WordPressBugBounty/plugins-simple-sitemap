@@ -210,6 +210,53 @@ class Attribute_Schema {
 	);
 
 	/**
+	 * Pro Child Pages shortcode defaults.
+	 */
+	const CHILD_SHORTCODE_DEFAULTS = array(
+		'include'             => '',
+		'exclude'             => '',
+		'child_of'            => '0',
+		'title_li'            => '',
+		'nofollow'            => 'false',
+		'post_type'           => 'page',
+		'show_excerpt'        => 'false',
+		'page_excerpt_length' => '25',
+	);
+
+	/**
+	 * Pro Taxonomy Terms shortcode defaults.
+	 */
+	const TAXONOMY_SHORTCODE_DEFAULTS = array(
+		'taxonomy'   => 'category',
+		'include'    => '',
+		'exclude'    => '',
+		'depth'      => '0',
+		'child_of'   => '0',
+		'title_li'   => '',
+		'nofollow'   => 'false',
+		'show_count' => '0',
+		'orderby'    => 'name',
+		'order'      => 'ASC',
+		'hide_empty' => '0',
+		'echo'       => '0',
+	);
+
+	/**
+	 * Pro Navigation Menu shortcode defaults.
+	 */
+	const NAVIGATION_MENU_SHORTCODE_DEFAULTS = array(
+		'menu'                 => '',
+		'container'            => false,
+		'menu_class'           => 'simple-sitemap-nav-menu',
+		'horizontal_separator' => ', ',
+		'list_icon'            => 'true',
+		'container_class'      => '',
+		'label'                => '',
+		'exclude_menu_ids'     => '',
+		'include_menu_ids'     => '',
+	);
+
+	/**
 	 * Content Sitemap shortcode defaults in the historic public value format.
 	 *
 	 * @return array<string, mixed>
@@ -251,6 +298,33 @@ class Attribute_Schema {
 	 */
 	public static function group_pro_shortcode_defaults() {
 		return self::to_legacy_booleans( self::GROUP_PRO_DEFAULTS );
+	}
+
+	/**
+	 * Pro Child Pages shortcode defaults.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function child_shortcode_defaults() {
+		return self::CHILD_SHORTCODE_DEFAULTS;
+	}
+
+	/**
+	 * Pro Taxonomy Terms shortcode defaults.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function taxonomy_shortcode_defaults() {
+		return self::TAXONOMY_SHORTCODE_DEFAULTS;
+	}
+
+	/**
+	 * Pro Navigation Menu shortcode defaults.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function navigation_menu_shortcode_defaults() {
+		return self::NAVIGATION_MENU_SHORTCODE_DEFAULTS;
 	}
 
 	/**
