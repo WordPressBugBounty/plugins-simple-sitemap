@@ -19,22 +19,25 @@ class Attribute_Schema {
 	 * Shared Content Sitemap defaults.
 	 */
 	const CONTENT_DEFAULTS = array(
-		'id'            => '',
-		'page_depth'    => 0,
-		'orderby'       => 'title',
-		'order'         => 'asc',
-		'show_excerpt'  => false,
-		'show_label'    => true,
-		'links'         => true,
-		'target_blank'  => false,
-		'include'       => '',
-		'exclude'       => '',
-		'paginate'      => false,
-		'page_size'     => 50,
-		'title_tag'     => '',
-		'post_type_tag' => 'h3',
-		'excerpt_tag'   => 'div',
-		'container_tag' => 'ul',
+		'id'             => '',
+		'page_depth'     => 0,
+		'orderby'        => 'title',
+		'order'          => 'asc',
+		'show_excerpt'   => false,
+		'show_label'     => true,
+		'links'          => true,
+		'target_blank'   => false,
+		'include'        => '',
+		'exclude'        => '',
+		'paginate'       => false,
+		'page_size'      => 50,
+		'title_tag'      => '',
+		'post_type_tag'  => 'h3',
+		'excerpt_tag'    => 'div',
+		'container_tag'  => 'ul',
+		'spacing_preset' => 'inherit',
+		'item_spacing'   => '',
+		'nested_spacing' => '',
 	);
 
 	/**
@@ -68,21 +71,24 @@ class Attribute_Schema {
 	 * Shared Grouped Sitemap defaults.
 	 */
 	const GROUP_DEFAULTS = array(
-		'id'            => '',
-		'page_depth'    => 0,
-		'tax'           => 'category',
-		'title_tag'     => '',
-		'show_excerpt'  => false,
-		'excerpt_tag'   => 'div',
-		'links'         => true,
-		'orderby'       => 'title',
-		'order'         => 'asc',
-		'post_type_tag' => 'h3',
-		'show_label'    => true,
-		'container_tag' => 'ul',
-		'num_terms'     => 0,
-		'paginate'      => false,
-		'page_size'     => 50,
+		'id'             => '',
+		'page_depth'     => 0,
+		'tax'            => 'category',
+		'title_tag'      => '',
+		'show_excerpt'   => false,
+		'excerpt_tag'    => 'div',
+		'links'          => true,
+		'orderby'        => 'title',
+		'order'          => 'asc',
+		'post_type_tag'  => 'h3',
+		'show_label'     => true,
+		'container_tag'  => 'ul',
+		'num_terms'      => 0,
+		'paginate'       => false,
+		'page_size'      => 50,
+		'spacing_preset' => 'inherit',
+		'item_spacing'   => '',
+		'nested_spacing' => '',
 	);
 
 	/**
@@ -115,10 +121,14 @@ class Attribute_Schema {
 	 * Child Pages block defaults.
 	 */
 	const CHILD_PAGE_DEFAULTS = array(
-		'parent_id' => 0,
-		'depth'     => 0,
-		'orderby'   => 'menu_order',
-		'order'     => 'asc',
+		'parent_id'      => 0,
+		'depth'          => 0,
+		'orderby'        => 'menu_order',
+		'order'          => 'asc',
+		'show_parent'    => false,
+		'spacing_preset' => 'inherit',
+		'item_spacing'   => '',
+		'nested_spacing' => '',
 	);
 
 	/**
@@ -132,6 +142,7 @@ class Attribute_Schema {
 		'excerpt_length'        => 25,
 		'image'                 => false,
 		'image_size'            => 48,
+		'separator'             => false,
 		'nofollow'              => false,
 		'post_type'             => 'page',
 		'respect_noindex'       => false,
@@ -142,17 +153,20 @@ class Attribute_Schema {
 	 * Pro Taxonomy Terms block defaults.
 	 */
 	const TAXONOMY_TERMS_BLOCK_DEFAULTS = array(
-		'taxonomy'   => 'category',
-		'include'    => '',
-		'exclude'    => '',
-		'depth'      => 0,
-		'child_of'   => 0,
-		'title_li'   => '',
-		'nofollow'   => false,
-		'show_count' => false,
-		'orderby'    => 'name',
-		'order'      => 'ASC',
-		'hide_empty' => false,
+		'taxonomy'       => 'category',
+		'include'        => '',
+		'exclude'        => '',
+		'depth'          => 0,
+		'child_of'       => 0,
+		'title_li'       => '',
+		'nofollow'       => false,
+		'show_count'     => false,
+		'orderby'        => 'name',
+		'order'          => 'ASC',
+		'hide_empty'     => false,
+		'spacing_preset' => 'inherit',
+		'item_spacing'   => '',
+		'nested_spacing' => '',
 	);
 
 	/**
@@ -166,22 +180,28 @@ class Attribute_Schema {
 		'list_icon'            => true,
 		'include_menu_ids'     => '',
 		'exclude_menu_ids'     => '',
+		'spacing_preset'       => 'inherit',
+		'item_spacing'         => '',
+		'nested_spacing'       => '',
 	);
 
 	/**
 	 * Pro Archive Links block defaults.
 	 */
 	const ARCHIVE_LINKS_BLOCK_DEFAULTS = array(
-		'source'        => 'monthly',
-		'post_type'     => 'post',
-		'taxonomy'      => 'category',
-		'limit'         => 12,
-		'order'         => 'DESC',
-		'label'         => '',
-		'heading_level' => 3,
-		'show_count'    => false,
-		'hide_empty'    => true,
-		'nofollow'      => false,
+		'source'         => 'monthly',
+		'post_type'      => 'post',
+		'taxonomy'       => 'category',
+		'limit'          => 12,
+		'order'          => 'DESC',
+		'label'          => '',
+		'heading_level'  => 3,
+		'show_count'     => false,
+		'hide_empty'     => true,
+		'nofollow'       => false,
+		'spacing_preset' => 'inherit',
+		'item_spacing'   => '',
+		'nested_spacing' => '',
 	);
 
 	/**
@@ -207,6 +227,9 @@ class Attribute_Schema {
 		'nofollow'              => false,
 		'respect_noindex'       => false,
 		'current_language_only' => false,
+		'spacing_preset'        => 'inherit',
+		'item_spacing'          => '',
+		'nested_spacing'        => '',
 	);
 
 	/**
@@ -221,24 +244,33 @@ class Attribute_Schema {
 		'post_type'           => 'page',
 		'show_excerpt'        => 'false',
 		'page_excerpt_length' => '25',
+		'separator'           => 'false',
+		'image'               => 'false',
+		'image_size'          => '24',
+		'spacing_preset'      => 'inherit',
+		'item_spacing'        => '',
+		'nested_spacing'      => '',
 	);
 
 	/**
 	 * Pro Taxonomy Terms shortcode defaults.
 	 */
 	const TAXONOMY_SHORTCODE_DEFAULTS = array(
-		'taxonomy'   => 'category',
-		'include'    => '',
-		'exclude'    => '',
-		'depth'      => '0',
-		'child_of'   => '0',
-		'title_li'   => '',
-		'nofollow'   => 'false',
-		'show_count' => '0',
-		'orderby'    => 'name',
-		'order'      => 'ASC',
-		'hide_empty' => '0',
-		'echo'       => '0',
+		'taxonomy'       => 'category',
+		'include'        => '',
+		'exclude'        => '',
+		'depth'          => '0',
+		'child_of'       => '0',
+		'title_li'       => '',
+		'nofollow'       => 'false',
+		'show_count'     => '0',
+		'orderby'        => 'name',
+		'order'          => 'ASC',
+		'hide_empty'     => '0',
+		'echo'           => '0',
+		'spacing_preset' => 'inherit',
+		'item_spacing'   => '',
+		'nested_spacing' => '',
 	);
 
 	/**
@@ -254,6 +286,9 @@ class Attribute_Schema {
 		'label'                => '',
 		'exclude_menu_ids'     => '',
 		'include_menu_ids'     => '',
+		'spacing_preset'       => 'inherit',
+		'item_spacing'         => '',
+		'nested_spacing'       => '',
 	);
 
 	/**
@@ -362,6 +397,9 @@ class Attribute_Schema {
 			'post_type_tag'    => 'string',
 			'excerpt_tag'      => 'string',
 			'container_tag'    => 'string',
+			'spacing_preset'   => 'string',
+			'item_spacing'     => 'string',
+			'nested_spacing'   => 'string',
 			'render_tab'       => 'boolean',
 			'block_post_types' => 'string',
 			'gutenberg_block'  => 'boolean',
@@ -438,6 +476,9 @@ class Attribute_Schema {
 			'num_terms'       => 'number',
 			'paginate'        => 'boolean',
 			'page_size'       => 'number',
+			'spacing_preset'  => 'string',
+			'item_spacing'    => 'string',
+			'nested_spacing'  => 'string',
 			'block_post_type' => 'string',
 			'gutenberg_block' => 'boolean',
 		);
@@ -481,10 +522,14 @@ class Attribute_Schema {
 	public static function child_page_block_attributes( $include_pro = false ) {
 		$defaults = self::CHILD_PAGE_DEFAULTS;
 		$types    = array(
-			'parent_id' => 'number',
-			'depth'     => 'number',
-			'orderby'   => 'string',
-			'order'     => 'string',
+			'parent_id'      => 'number',
+			'depth'          => 'number',
+			'orderby'        => 'string',
+			'order'          => 'string',
+			'show_parent'    => 'boolean',
+			'spacing_preset' => 'string',
+			'item_spacing'   => 'string',
+			'nested_spacing' => 'string',
 		);
 
 		if ( $include_pro ) {
@@ -499,6 +544,7 @@ class Attribute_Schema {
 					'excerpt_length'        => 'number',
 					'image'                 => 'boolean',
 					'image_size'            => 'number',
+					'separator'             => 'boolean',
 					'nofollow'              => 'boolean',
 					'post_type'             => 'string',
 					'respect_noindex'       => 'boolean',
@@ -519,17 +565,20 @@ class Attribute_Schema {
 		return self::build_block_schema(
 			self::TAXONOMY_TERMS_BLOCK_DEFAULTS,
 			array(
-				'taxonomy'   => 'string',
-				'include'    => 'string',
-				'exclude'    => 'string',
-				'depth'      => 'number',
-				'child_of'   => 'number',
-				'title_li'   => 'string',
-				'nofollow'   => 'boolean',
-				'show_count' => 'boolean',
-				'orderby'    => 'string',
-				'order'      => 'string',
-				'hide_empty' => 'boolean',
+				'taxonomy'       => 'string',
+				'include'        => 'string',
+				'exclude'        => 'string',
+				'depth'          => 'number',
+				'child_of'       => 'number',
+				'title_li'       => 'string',
+				'nofollow'       => 'boolean',
+				'show_count'     => 'boolean',
+				'orderby'        => 'string',
+				'order'          => 'string',
+				'hide_empty'     => 'boolean',
+				'spacing_preset' => 'string',
+				'item_spacing'   => 'string',
+				'nested_spacing' => 'string',
 			)
 		);
 	}
@@ -550,6 +599,9 @@ class Attribute_Schema {
 				'list_icon'            => 'boolean',
 				'include_menu_ids'     => 'string',
 				'exclude_menu_ids'     => 'string',
+				'spacing_preset'       => 'string',
+				'item_spacing'         => 'string',
+				'nested_spacing'       => 'string',
 			)
 		);
 	}
@@ -563,16 +615,19 @@ class Attribute_Schema {
 		return self::build_block_schema(
 			self::ARCHIVE_LINKS_BLOCK_DEFAULTS,
 			array(
-				'source'        => 'string',
-				'post_type'     => 'string',
-				'taxonomy'      => 'string',
-				'limit'         => 'number',
-				'order'         => 'string',
-				'label'         => 'string',
-				'heading_level' => 'number',
-				'show_count'    => 'boolean',
-				'hide_empty'    => 'boolean',
-				'nofollow'      => 'boolean',
+				'source'         => 'string',
+				'post_type'      => 'string',
+				'taxonomy'       => 'string',
+				'limit'          => 'number',
+				'order'          => 'string',
+				'label'          => 'string',
+				'heading_level'  => 'number',
+				'show_count'     => 'boolean',
+				'hide_empty'     => 'boolean',
+				'nofollow'       => 'boolean',
+				'spacing_preset' => 'string',
+				'item_spacing'   => 'string',
+				'nested_spacing' => 'string',
 			)
 		);
 	}
@@ -605,6 +660,9 @@ class Attribute_Schema {
 				'nofollow'              => 'boolean',
 				'respect_noindex'       => 'boolean',
 				'current_language_only' => 'boolean',
+				'spacing_preset'        => 'string',
+				'item_spacing'          => 'string',
+				'nested_spacing'        => 'string',
 			)
 		);
 	}

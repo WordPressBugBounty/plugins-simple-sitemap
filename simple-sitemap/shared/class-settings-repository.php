@@ -29,6 +29,9 @@ class Settings_Repository {
 		$defaults['txtar_sitemap_script']                          = '';
 		$defaults['chk_parent_page_link']                          = '0';
 		$defaults['txt_exclude_parent_pages']                      = '';
+		$defaults['sitemap_spacing_preset']                        = 'inherit';
+		$defaults['sitemap_item_spacing']                          = '';
+		$defaults['sitemap_nested_spacing']                        = '';
 		$defaults['default_on_checkboxes']['chk_parent_page_link'] = '0';
 
 		return $defaults;

@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "wpgoplugins/simple-sitemap-group-block",
-	"version": "3.6.3",
+	"version": "3.7.0",
 	"title": "Simple Sitemap Group",
 	"category": "simple-sitemap",
 	"icon": "networking",
@@ -32,7 +32,10 @@
 		"num_terms": { "type": "number", "default": 0 },
 		"paginate": { "type": "boolean", "default": false },
 		"page_size": { "type": "number", "default": 50 },
-		"gutenberg_block": { "type": "boolean", "default": true }
+		"gutenberg_block": { "type": "boolean", "default": true },
+		"spacing_preset": { "type": "string", "default": "inherit" },
+		"item_spacing": { "type": "string", "default": "" },
+		"nested_spacing": { "type": "string", "default": "" }
 	},
 	"example": {
 		"attributes": {

@@ -3,6 +3,26 @@
 		"type": "new",
 		"license": "free",
 		"banner_url": "block-preview.png",
+		"version": "3.7.0",
+		"date": "21st August 2026",
+		"title": "Consistent Sitemap Spacing",
+		"description": "<p style='margin:15px 0;'>Set Compact, Comfortable, or Custom item and nested-level spacing globally, then override it for an individual block or shortcode when needed. Child Pages can also show its linked parent as the root.</p>",
+		"learn_more_url": "https://wpgoplugins.com/documentation/simple-sitemap/reference/"
+	},
+	{
+		"type": "new",
+		"license": "pro",
+		"banner_url": "optionally-exclude-child-pages.png",
+		"version": "3.7.0",
+		"date": "21st August 2026",
+		"title": "Clearer Child Page Sitemaps",
+		"description": "<p style='margin:15px 0;'>Add optional separator lines and compact featured-image thumbnails to licensed Child Pages sitemaps, including the established <code>[simple-sitemap-child]</code> workflow.</p>",
+		"learn_more_url": "https://demo.wpgoplugins.com/simple-sitemap/#child-pages-shortcode"
+	},
+	{
+		"type": "new",
+		"license": "free",
+		"banner_url": "block-preview.png",
 		"version": "3.6.3",
 		"date": "20th August 2026",
 		"title": "A New Simple Sitemap Home",

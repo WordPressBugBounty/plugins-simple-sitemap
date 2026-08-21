@@ -118,13 +118,25 @@ class Child_Pages_Block {
 		}
 		$list = (string) apply_filters( 'simple_sitemap_child_pages_list_html', $list, $attributes, $list_args, $block );
 
-		if ( '' === trim( $list ) ) {
+		$parent_id   = isset( $list_args['child_of'] ) ? absint( $list_args['child_of'] ) : 0;
+		$show_parent = ! empty( $attributes['show_parent'] ) && Utility::filter_boolean( $attributes['show_parent'] );
+		$parent      = $show_parent && $parent_id ? get_post( $parent_id ) : null;
+		if ( $parent instanceof \WP_Post && 'publish' === $parent->post_status ) {
+			$parent_link = '<a href="' . esc_url( get_permalink( $parent ) ) . '">' . esc_html( get_the_title( $parent ) ) . '</a>';
+			$children    = '' !== trim( $list ) ? '<ul class="children">' . $list . '</ul>' : '';
+			$body        = '<ul class="simple-sitemap-page main"><li class="simple-sitemap-parent-page page_item page-item-' . absint( $parent->ID ) . '">' . $parent_link . $children . '</li></ul>';
+		} elseif ( '' === trim( $list ) ) {
 			$body = '<p class="no-posts">' . esc_html__( 'No child pages found.', 'simple-sitemap' ) . '</p>';
 		} else {
 			$body = '<ul class="simple-sitemap-page main">' . $list . '</ul>';
 		}
 
-		$html = '<div class="simple-sitemap-container simple-sitemap-child-pages">' . $body . '</div>';
+		$container_classes = 'simple-sitemap-container simple-sitemap-spacing-root simple-sitemap-child-pages';
+		$filtered_classes  = apply_filters( 'simple_sitemap_child_pages_container_classes', $container_classes, $attributes, $block );
+		if ( is_string( $filtered_classes ) && '' !== trim( $filtered_classes ) ) {
+			$container_classes = $filtered_classes;
+		}
+		$html = '<div class="' . esc_attr( $container_classes ) . '"' . Sitemap_Styles::style_attribute( $attributes ) . '>' . $body . '</div>';
 		$html = Block_Wrapper::wrap( $html, 'simple-sitemap-child-pages-block' );
 
 		return (string) apply_filters( 'simple_sitemap_child_pages_output', $html, $attributes, $list_args, $block );

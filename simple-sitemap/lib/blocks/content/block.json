@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "wpgoplugins/simple-sitemap-block",
-	"version": "3.6.3",
+	"version": "3.7.0",
 	"title": "Simple Sitemap",
 	"category": "simple-sitemap",
 	"icon": "editor-ul",
@@ -38,7 +38,10 @@
 		"include": { "type": "string", "default": "" },
 		"exclude": { "type": "string", "default": "" },
 		"paginate": { "type": "boolean", "default": false },
-		"page_size": { "type": "number", "default": 50 }
+		"page_size": { "type": "number", "default": 50 },
+		"spacing_preset": { "type": "string", "default": "inherit" },
+		"item_spacing": { "type": "string", "default": "" },
+		"nested_spacing": { "type": "string", "default": "" }
 	},
 	"example": {
 		"attributes": {

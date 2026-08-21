@@ -46,6 +46,7 @@ class BootStrap {
 		require_once $root . 'shared/class-block-wrapper.php';
 		require_once $root . 'shared/class-settings-repository.php';
 		new Settings_Repository();
+		require_once $root . 'shared/class-sitemap-styles.php';
 		require_once $root . 'shared/class-sitemap-cache.php';
 		new Sitemap_Cache();
 		require_once $root . 'shared/providers/class-seo-noindex-provider.php';

@@ -93,24 +93,46 @@ class Editor_Preview_Controller {
 			);
 		}
 
-		return $this->respond_with_items(
-			array_map(
-				static function ( $page ) {
-					$title = $page->post_title;
-					if ( '' === $title ) {
-						/* translators: %d: ID of an untitled post. */
-						$title = sprintf( __( '#%d (no title)', 'simple-sitemap' ), $page->ID );
-					}
+		$items = array_map(
+			static function ( $page ) {
+				$title = $page->post_title;
+				if ( '' === $title ) {
+					/* translators: %d: ID of an untitled post. */
+					$title = sprintf( __( '#%d (no title)', 'simple-sitemap' ), $page->ID );
+				}
 
-					return array(
-						'id'     => (int) $page->ID,
-						'parent' => (int) $page->post_parent,
-						'title'  => $title,
-						'url'    => (string) get_permalink( $page ),
-					);
-				},
-				$pages
-			),
+				return array(
+					'id'     => (int) $page->ID,
+					'parent' => (int) $page->post_parent,
+					'title'  => $title,
+					'url'    => (string) get_permalink( $page ),
+				);
+			},
+			$pages
+		);
+
+		if ( ! empty( $attributes['show_parent'] ) && ! empty( $list_args['child_of'] ) ) {
+			$parent = get_post( absint( $list_args['child_of'] ) );
+			if ( $parent && 'publish' === $parent->post_status ) {
+				$parent_title = $parent->post_title;
+				if ( '' === $parent_title ) {
+					/* translators: %d: ID of an untitled post. */
+					$parent_title = sprintf( __( '#%d (no title)', 'simple-sitemap' ), $parent->ID );
+				}
+				array_unshift(
+					$items,
+					array(
+						'id'     => (int) $parent->ID,
+						'parent' => 0,
+						'title'  => $parent_title,
+						'url'    => (string) get_permalink( $parent ),
+					)
+				);
+			}
+		}
+
+		return $this->respond_with_items(
+			$items,
 			esc_html__( 'No child pages found.', 'simple-sitemap' )
 		);
 	}

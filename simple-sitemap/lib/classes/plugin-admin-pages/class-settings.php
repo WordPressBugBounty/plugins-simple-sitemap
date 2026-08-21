@@ -162,10 +162,14 @@ class Settings {
 	 * @return array $input Sanitized input content.
 	 */
 	public function sanitize_plugin_options( $input ) {
+		$input = is_array( $input ) ? $input : array();
 
 		// Strip html from textboxes.
-		$input['txtar_sitemap_script']     = wp_filter_nohtml_kses( $input['txtar_sitemap_script'] );
-		$input['txt_exclude_parent_pages'] = wp_filter_nohtml_kses( $input['txt_exclude_parent_pages'] );
+		$input['txtar_sitemap_script']     = wp_filter_nohtml_kses( isset( $input['txtar_sitemap_script'] ) ? $input['txtar_sitemap_script'] : '' );
+		$input['txt_exclude_parent_pages'] = wp_filter_nohtml_kses( isset( $input['txt_exclude_parent_pages'] ) ? $input['txt_exclude_parent_pages'] : '' );
+		$input['sitemap_spacing_preset']   = Sitemap_Styles::sanitize_preset( isset( $input['sitemap_spacing_preset'] ) ? $input['sitemap_spacing_preset'] : 'inherit' );
+		$input['sitemap_item_spacing']     = Sitemap_Styles::sanitize_spacing( isset( $input['sitemap_item_spacing'] ) ? $input['sitemap_item_spacing'] : '' );
+		$input['sitemap_nested_spacing']   = Sitemap_Styles::sanitize_spacing( isset( $input['sitemap_nested_spacing'] ) ? $input['sitemap_nested_spacing'] : '' );
 
 		// Sanitize plugin options via this filter hook. Allows you to sanitize options via another class.
 		// return Hooks::wpgo_sanitize_plugin_options( $input );
@@ -331,6 +335,9 @@ class Settings {
 						<li><code>exclude=""</code> - Comma separated list of post IDs to exclude from the sitemap.</li>
 						<li><code>paginate="false"</code> - Set to "true" to use bounded, linked pagination rather than loading every item in one request. Add a unique <code>id</code> when a page contains multiple similar sitemaps.</li>
 						<li><code>page_size="50"</code> - Number of sitemap entries per page when pagination is enabled (1-200).</li>
+						<li><code>spacing_preset="inherit"</code> - Use the global sitemap spacing, or choose <code>compact</code>, <code>comfortable</code>, or <code>custom</code> for this shortcode.</li>
+						<li><code>item_spacing=""</code> - Custom vertical spacing around sitemap items. Used with <code>spacing_preset="custom"</code>.</li>
+						<li><code>nested_spacing=""</code> - Custom spacing before and after nested levels. Used with <code>spacing_preset="custom"</code>.</li>
 						<li><code>image="false"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Optionally show the post featured image (if defined) next to each sitemap item.</li>
 						<li><code>image_size="22"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Size of the post featured image (if displayed).</li>
 						<li><code>list_icon="true"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Optionally display HTML bullet icons.</li>
@@ -368,6 +375,9 @@ class Settings {
 						<li><code>num_terms="0"</code> - Limit the number of taxonomy terms displayed.</li>
 						<li><code>paginate="false"</code> - Set to "true" to give each taxonomy section its own bounded, linked pagination.</li>
 						<li><code>page_size="50"</code> - Number of entries per taxonomy-section page when pagination is enabled (1-200).</li>
+						<li><code>spacing_preset="inherit"</code> - Use the global sitemap spacing, or choose <code>compact</code>, <code>comfortable</code>, or <code>custom</code> for this shortcode.</li>
+						<li><code>item_spacing=""</code> - Custom vertical spacing around sitemap items.</li>
+						<li><code>nested_spacing=""</code> - Custom spacing before and after nested levels.</li>
 						<li><code>type="post"</code><?php echo wp_kses_post( $pro_attribute ); ?> - List posts grouped by taxonomy from ANY post type.</li>
 						<li><code>term_orderby="name"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Order post taxonomy term labels by title etc.</li>
 						<li><code>term_order="asc"</code><?php echo wp_kses_post( $pro_attribute ); ?> - List taxonomy term labels in ascending, or descending order.</li>
@@ -401,6 +411,9 @@ class Settings {
 						<li><code>orderby="name"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Value to sort taxonomies by (name, id etc.).</li>
 						<li><code>order="asc"</code><?php echo wp_kses_post( $pro_attribute ); ?> - List taxonomies in ascending, or descending order.</li>
 						<li><code>hide_empty="0"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Hide empty taxonomies (accepts '0' or '1').</li>
+						<li><code>spacing_preset="inherit"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Use the global sitemap spacing, or choose a per-shortcode preset.</li>
+						<li><code>item_spacing=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Custom vertical spacing around sitemap items.</li>
+						<li><code>nested_spacing=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Custom spacing before and after nested levels.</li>
 					</ul>
 
 					<p id="simple-sitemap-menu-shortcode" style="margin:35px 0 20px 0;"><code style="font-size:15px;">[simple-sitemap-menu ... ]</code></p>
@@ -415,6 +428,9 @@ class Settings {
 						<li><code>label=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Text label displayed above menu items.</li>
 						<li><code>exclude_menu_ids=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Comma separated list of menu IDs to exclude from the sitemap..</li>
 						<li><code>include_menu_ids=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Comma separated list of menu IDs to include in the sitemap.</li>
+						<li><code>spacing_preset="inherit"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Use the global sitemap spacing, or choose a per-shortcode preset.</li>
+						<li><code>item_spacing=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Custom vertical spacing around sitemap items.</li>
+						<li><code>nested_spacing=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Custom spacing before and after nested levels.</li>
 					</ul>
 
 					<p id="simple-sitemap-child-shortcode" style="margin:35px 0 20px 0;"><code style="font-size:15px;">[simple-sitemap-child ... ]</code></p>
@@ -426,6 +442,12 @@ class Settings {
 						<li><code>post_type="page"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Post type to query for.</li>
 						<li><code>show_excerpt="false"</code> - Optionally show post excerpt (if defined) under each sitemap item.</li>
 						<li><code>page_excerpt_length="25"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Trim page excerpt length to specific number of words.</li>
+						<li><code>separator="false"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Add a subtle separator between child items.</li>
+						<li><code>image="false"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Show compact featured-image thumbnails beside child items.</li>
+						<li><code>image_size="24"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Square thumbnail size in pixels. Values from 16 to 32 pixels work well for compact child lists.</li>
+						<li><code>spacing_preset="inherit"</code><?php echo wp_kses_post( $pro_attribute ); ?> - Use the global sitemap spacing, or choose a per-shortcode preset.</li>
+						<li><code>item_spacing=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Custom vertical spacing around child items.</li>
+						<li><code>nested_spacing=""</code><?php echo wp_kses_post( $pro_attribute ); ?> - Custom spacing before and after nested child levels.</li>
 					</ul>
 				</div>
 			</div>
@@ -443,6 +465,35 @@ class Settings {
 						$options = self::get_plugin_options();
 						settings_fields( 'simple_sitemap_options_group' );
 						?>
+
+						<table class="form-table" role="presentation">
+							<tr>
+								<th scope="row"><label for="simple-sitemap-spacing-preset"><?php esc_html_e( 'Sitemap spacing', 'simple-sitemap' ); ?></label></th>
+								<td>
+									<select id="simple-sitemap-spacing-preset" name="simple_sitemap_options[sitemap_spacing_preset]">
+										<option value="inherit" <?php selected( $options['sitemap_spacing_preset'], 'inherit' ); ?>><?php esc_html_e( 'Current theme/plugin default', 'simple-sitemap' ); ?></option>
+										<option value="compact" <?php selected( $options['sitemap_spacing_preset'], 'compact' ); ?>><?php esc_html_e( 'Compact', 'simple-sitemap' ); ?></option>
+										<option value="comfortable" <?php selected( $options['sitemap_spacing_preset'], 'comfortable' ); ?>><?php esc_html_e( 'Comfortable', 'simple-sitemap' ); ?></option>
+										<option value="custom" <?php selected( $options['sitemap_spacing_preset'], 'custom' ); ?>><?php esc_html_e( 'Custom', 'simple-sitemap' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Sets the default item and nested-list spacing for every Simple Sitemap block and shortcode. Existing output remains unchanged until you choose a preset or custom value.', 'simple-sitemap' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><label for="simple-sitemap-item-spacing"><?php esc_html_e( 'Custom item spacing', 'simple-sitemap' ); ?></label></th>
+								<td>
+									<input id="simple-sitemap-item-spacing" type="text" class="regular-text code" name="simple_sitemap_options[sitemap_item_spacing]" value="<?php echo esc_attr( $options['sitemap_item_spacing'] ); ?>" placeholder="0.2em">
+									<p class="description"><?php esc_html_e( 'Vertical space around each sitemap item. Used when Custom is selected; for example 0.2em or 4px.', 'simple-sitemap' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><label for="simple-sitemap-nested-spacing"><?php esc_html_e( 'Custom nested spacing', 'simple-sitemap' ); ?></label></th>
+								<td>
+									<input id="simple-sitemap-nested-spacing" type="text" class="regular-text code" name="simple_sitemap_options[sitemap_nested_spacing]" value="<?php echo esc_attr( $options['sitemap_nested_spacing'] ); ?>" placeholder="0.3em 0.5em">
+									<p class="description"><?php esc_html_e( 'Space before and after nested sitemap levels. Use one or two CSS length values.', 'simple-sitemap' ); ?></p>
+								</td>
+							</tr>
+						</table>
 
 						<div class="simple-sitemap-pro-tab">
 							<table class="form-table">

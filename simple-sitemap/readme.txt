@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: html sitemap, sitemap, responsive sitemap, seo sitemap, block
 Requires at least: 6.3
 Requires PHP: 7.4
-Tested up to: 7.0
-Stable tag: 3.6.3
+Tested up to: 7.1
+Stable tag: 3.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,6 +35,9 @@ The free edition includes:
 * Optional linked pagination for content lists and individual grouped sections.
 * Page-depth and parent-page-link controls.
 * Multiple sitemaps on the same page.
+* Global item and nested-level spacing presets, with optional per-block and
+  per-shortcode overrides.
+* An optional linked parent at the root of the Child Pages block.
 * The `[simple-sitemap]` and `[simple-sitemap-group]` shortcodes for classic
   content and page-builder workflows.
 
@@ -56,6 +59,8 @@ Pro adds:
   Product Sitemap blocks.
 * Enhanced Child Pages controls for subtree exclusions, excerpts, images, and
   nofollow links, including hierarchical custom post types.
+* Optional separators and compact featured-image thumbnails for child-page
+  sitemaps, including the `[simple-sitemap-child]` shortcode.
 * Per-section Content Sitemap ordering, limits, and include/exclude rules.
 * Optional noindex filtering for Yoast SEO, Rank Math, and SEOPress, plus
   current-language filtering for WPML and Polylang.
@@ -133,6 +138,13 @@ from deactivating the plugin under Plugins.
 6. Display the tabbed layout on the front end.
 7. Simple Sitemap Pro adds compact horizontal sitemap layouts.
 == Changelog ==
+= 3.7.0 - August 21, 2026 =
+
+* [new] Added global Compact, Comfortable, and Custom sitemap spacing controls, plus per-block and per-shortcode item and nested-level overrides.
+* [new] Added an optional linked parent at the root of the Child Pages block.
+* [update] Unified spacing inheritance across every included sitemap block and shortcode while retaining existing output until a setting or instance override is selected.
+* [update] Expanded the product guide, complete reference, product page, and live demos for the new controls.
+
 = 3.6.3 - August 20, 2026 =
 
 * [new] Replaced the legacy welcome screen with a professional Home dashboard, guided sitemap creation, Quick Start steps, and clear Free feature actions.

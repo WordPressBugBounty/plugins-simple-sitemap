@@ -6,26 +6,44 @@ body .simple-sitemap-menu li {
 
 /* Simple Sitemap */
 
-.simple-sitemap-container {
+.simple-sitemap-container,
+ul.ss-top-level {
 	color: inherit;
 	font-size: 1em;
 	line-height: 1.6;
 }
 
-.simple-sitemap-container ul {
+.simple-sitemap-container ul,
+ul.ss-top-level,
+ul.ss-top-level ul {
 	margin: 0 0 0 1.2em;
 	padding: 0;
 }
 
-.simple-sitemap-container ul.children {
-	margin-block: 0.4em 0.65em;
+.simple-sitemap-container ul ul,
+ul.ss-top-level ul {
+	margin-block: var(--simple-sitemap-nested-spacing, 0.4em 0.65em);
 }
 
-.simple-sitemap-container li {
-	margin-block: 0.35em;
+.simple-sitemap-container li,
+ul.ss-top-level li {
+	margin-block: var(--simple-sitemap-item-spacing, 0.35em);
 }
 
-.simple-sitemap-container a {
+/*
+ * New spacing controls only override legacy/theme output when a safe custom
+ * property is present on the individual sitemap root.
+ */
+.simple-sitemap-spacing-root[style*="--simple-sitemap-item-spacing"] li {
+	margin-block: var(--simple-sitemap-item-spacing);
+}
+
+.simple-sitemap-spacing-root[style*="--simple-sitemap-nested-spacing"] ul ul {
+	margin-block: var(--simple-sitemap-nested-spacing);
+}
+
+.simple-sitemap-container a,
+ul.ss-top-level a {
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.18em;
 }
@@ -52,12 +70,28 @@ body .simple-sitemap-menu li {
 	text-decoration: none;
 }
 
-.simple-sitemap-child-page-image {
+.simple-sitemap-child-page-image,
+.simple-sitemap-child-shortcode-image {
 	display: inline-flex;
 	margin: 0 0.65em 0.25em 0;
 	border-radius: 0.45em;
-	object-fit: cover;
 	vertical-align: middle;
+}
+
+.simple-sitemap-child-page-image img,
+.simple-sitemap-child-shortcode-image img {
+	display: block;
+	max-width: none;
+	border-radius: inherit;
+	object-fit: cover;
+}
+
+.simple-sitemap-child-pages--separated > li + li,
+.simple-sitemap-child-pages--separated ul > li + li {
+	border-block-start: 1px solid #d8d8d8;
+	border-block-start: 1px solid
+		color-mix(in srgb, currentcolor 18%, transparent);
+	padding-block-start: var(--simple-sitemap-item-spacing, 0.35em);
 }
 
 .simple-sitemap-product-category + .simple-sitemap-product-category {
@@ -80,7 +114,7 @@ body .simple-sitemap-menu li {
 	display: block;
 	margin-block-start: 0.15em;
 	font-size: 0.9em;
-	opacity: 0.78;
+	opacity: 1;
 }
 
 .simple-sitemap-wrap:not(:first-of-type) {
@@ -92,7 +126,7 @@ body .simple-sitemap-menu li {
 	margin: 0.2em 0 0.65em;
 	font-size: 0.875em;
 	line-height: 1.55;
-	opacity: 0.78;
+	opacity: 1;
 }
 
 .simple-sitemap-container span.excerpt {

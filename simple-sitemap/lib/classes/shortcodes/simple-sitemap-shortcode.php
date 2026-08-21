@@ -233,9 +233,9 @@ class Simple_Sitemap_Shortcode {
 		$registered_post_types = get_post_types();
 
 		$sitemap_unique_id = 'simple-sitemap-container-' . $args['id'];
-		$container_classes = 'simple-sitemap-container ' . $sitemap_unique_id . $render_class . $container_format_class;
+		$container_classes = 'simple-sitemap-container simple-sitemap-spacing-root ' . $sitemap_unique_id . $render_class . $container_format_class;
 
-		$sitemap .= '<div id="' . esc_attr( $sitemap_unique_id ) . '" class="' . esc_attr( $container_classes ) . '">';
+		$sitemap .= '<div id="' . esc_attr( $sitemap_unique_id ) . '" class="' . esc_attr( $container_classes ) . '"' . Sitemap_Styles::style_attribute( $args ) . '>';
 
 		// Conditionally output tab headers.
 		if ( 'tab' === $args['render'] ) :
