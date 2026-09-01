@@ -136,8 +136,10 @@ class Child_Pages_Block {
 		if ( is_string( $filtered_classes ) && '' !== trim( $filtered_classes ) ) {
 			$container_classes = $filtered_classes;
 		}
-		$html = '<div class="' . esc_attr( $container_classes ) . '"' . Sitemap_Styles::style_attribute( $attributes ) . '>' . $body . '</div>';
-		$html = Block_Wrapper::wrap( $html, 'simple-sitemap-child-pages-block' );
+		$style_properties = apply_filters( 'simple_sitemap_child_pages_style_properties', array(), $attributes, $block );
+		$style_properties = is_array( $style_properties ) ? $style_properties : array();
+		$html             = '<div class="' . esc_attr( $container_classes ) . '"' . Sitemap_Styles::style_attribute( $attributes, $style_properties ) . '>' . $body . '</div>';
+		$html             = Block_Wrapper::wrap( $html, 'simple-sitemap-child-pages-block' );
 
 		return (string) apply_filters( 'simple_sitemap_child_pages_output', $html, $attributes, $list_args, $block );
 	}

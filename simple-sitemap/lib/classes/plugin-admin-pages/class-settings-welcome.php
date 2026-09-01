@@ -102,16 +102,26 @@ class Settings_Welcome {
 		check_admin_referer( 'simple_sitemap_create_page' );
 
 		$layout          = isset( $_GET['layout'] ) ? sanitize_key( wp_unslash( $_GET['layout'] ) ) : 'posts-pages';
-		$premium_layouts = array( 'custom-content', 'taxonomy-terms', 'navigation-menu', 'archive-links', 'products', 'advanced-styling' );
+		$premium_layouts = array_column( $this->get_specialist_features(), 'layout' );
 		if ( in_array( $layout, $premium_layouts, true ) && ! $this->custom_plugin_data->is_premium ) {
 			wp_die( esc_html__( 'This starter is available in Simple Sitemap Pro.', 'simple-sitemap' ) );
+		}
+
+		if ( in_array( $layout, array( 'products', 'product-categories', 'sale-products', 'in-stock-products', 'featured-products' ), true ) && ! $this->has_woocommerce() ) {
+			$redirect_url = add_query_arg( 'simple_sitemap_product_unavailable', '1', $this->custom_plugin_data->welcome_url );
+			wp_safe_redirect( $redirect_url );
+			exit;
 		}
 
 		$starter = $this->get_starter_page( $layout );
 		$post_id = wp_insert_post(
 			array(
 				'post_title'   => $starter['title'],
-				'post_content' => $starter['content'],
+				/*
+				 * Dynamic block attributes can contain JSON strings. wp_insert_post()
+				 * unslashes its input, so preserve the serialized block escapes here.
+				 */
+				'post_content' => wp_slash( $starter['content'] ),
 				'post_status'  => 'draft',
 				'post_type'    => 'page',
 			),
@@ -145,8 +155,6 @@ class Settings_Welcome {
 				'description' => __( 'Create an alphabetical sitemap of your published Pages.', 'simple-sitemap' ),
 				'url'         => $this->get_create_page_url( 'pages' ),
 				'action'      => __( 'Create draft', 'simple-sitemap' ),
-				'meta'        => __( 'Creates a draft', 'simple-sitemap' ),
-				'meta_icon'   => 'edit-page',
 			),
 			array(
 				'icon'        => 'admin-post',
@@ -154,8 +162,27 @@ class Settings_Welcome {
 				'description' => __( 'Create a browsable list of your published blog posts.', 'simple-sitemap' ),
 				'url'         => $this->get_create_page_url( 'posts' ),
 				'action'      => __( 'Create draft', 'simple-sitemap' ),
-				'meta'        => __( 'Creates a draft', 'simple-sitemap' ),
-				'meta_icon'   => 'edit-page',
+			),
+			array(
+				'icon'        => 'clock',
+				'title'       => __( 'Recent posts first', 'simple-sitemap' ),
+				'description' => __( 'List blog posts in reverse date order so recent content appears first.', 'simple-sitemap' ),
+				'url'         => $this->get_create_page_url( 'recent-posts' ),
+				'action'      => __( 'Create draft', 'simple-sitemap' ),
+			),
+			array(
+				'icon'        => 'excerpt-view',
+				'title'       => __( 'Pages with summaries', 'simple-sitemap' ),
+				'description' => __( 'Add excerpts beneath Page links to help visitors choose where to go.', 'simple-sitemap' ),
+				'url'         => $this->get_create_page_url( 'page-summaries' ),
+				'action'      => __( 'Create draft', 'simple-sitemap' ),
+			),
+			array(
+				'icon'        => 'text-page',
+				'title'       => __( 'Posts with summaries', 'simple-sitemap' ),
+				'description' => __( 'Pair each post link with an excerpt for a more informative index.', 'simple-sitemap' ),
+				'url'         => $this->get_create_page_url( 'post-summaries' ),
+				'action'      => __( 'Create draft', 'simple-sitemap' ),
 			),
 			array(
 				'icon'        => 'columns',
@@ -163,8 +190,13 @@ class Settings_Welcome {
 				'description' => __( 'Keep posts and Pages easy to scan in responsive tabs.', 'simple-sitemap' ),
 				'url'         => $this->get_create_page_url( 'posts-pages' ),
 				'action'      => __( 'Create draft', 'simple-sitemap' ),
-				'meta'        => __( 'Creates a draft', 'simple-sitemap' ),
-				'meta_icon'   => 'edit-page',
+			),
+			array(
+				'icon'        => 'editor-ul',
+				'title'       => __( 'Combined content list', 'simple-sitemap' ),
+				'description' => __( 'Show posts and Pages together in one continuous sitemap.', 'simple-sitemap' ),
+				'url'         => $this->get_create_page_url( 'combined-list' ),
+				'action'      => __( 'Create draft', 'simple-sitemap' ),
 			),
 			array(
 				'icon'        => 'networking',
@@ -172,8 +204,6 @@ class Settings_Welcome {
 				'description' => __( 'Help visitors browse posts under familiar category headings.', 'simple-sitemap' ),
 				'url'         => $this->get_create_page_url( 'grouped' ),
 				'action'      => __( 'Create grouped draft', 'simple-sitemap' ),
-				'meta'        => __( 'Creates a draft', 'simple-sitemap' ),
-				'meta_icon'   => 'edit-page',
 			),
 			array(
 				'icon'        => 'list-view',
@@ -181,8 +211,6 @@ class Settings_Welcome {
 				'description' => __( 'Create a structured sitemap beneath a parent Page you choose.', 'simple-sitemap' ),
 				'url'         => $this->get_create_page_url( 'child-pages' ),
 				'action'      => __( 'Create hierarchy draft', 'simple-sitemap' ),
-				'meta'        => __( 'Creates a draft', 'simple-sitemap' ),
-				'meta_icon'   => 'edit-page',
 			),
 			array(
 				'icon'        => 'admin-settings',
@@ -190,16 +218,20 @@ class Settings_Welcome {
 				'description' => __( 'Review established shortcode options and plugin-wide defaults.', 'simple-sitemap' ),
 				'url'         => $this->custom_plugin_data->main_settings_url,
 				'action'      => __( 'Open settings', 'simple-sitemap' ),
-				'meta'        => __( 'Opens plugin settings', 'simple-sitemap' ),
-				'meta_icon'   => 'admin-settings',
 			),
 		);
 
+		foreach ( $core_actions as &$core_action ) {
+			$core_action['edition'] = 'free';
+		}
+		unset( $core_action );
+
 		$specialist_features = $this->get_specialist_features();
 
-		$resource_links  = $this->get_resource_links( $is_premium );
-		$feature_copy    = $this->get_feature_section_copy( $is_premium );
-		$feature_actions = $core_actions;
+		$resource_links    = $this->get_resource_links( $is_premium );
+		$feature_copy      = $this->get_feature_section_copy( $is_premium );
+		$feature_actions   = $core_actions;
+		$companion_plugins = Product_Links::companion_plugins( 'home-companions' );
 
 		if ( $is_premium ) {
 			foreach ( $specialist_features as $specialist_feature ) {
@@ -209,8 +241,7 @@ class Settings_Welcome {
 					'description' => $specialist_feature['description'],
 					'url'         => $this->get_create_page_url( $specialist_feature['layout'] ),
 					'action'      => __( 'Create starter', 'simple-sitemap' ),
-					'meta'        => __( 'Creates a draft', 'simple-sitemap' ),
-					'meta_icon'   => 'edit-page',
+					'edition'     => 'pro',
 				);
 			}
 		}
@@ -220,6 +251,9 @@ class Settings_Welcome {
 				<h1 class="screen-reader-text"><?php echo esc_html( $plugin_lbl ); ?> <?php esc_html_e( 'Home', 'simple-sitemap' ); ?></h1>
 				<?php if ( isset( $_GET['simple_sitemap_create_error'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 					<div class="notice notice-error"><p><?php esc_html_e( 'WordPress could not create the draft sitemap page. Please try again.', 'simple-sitemap' ); ?></p></div>
+				<?php endif; ?>
+				<?php if ( isset( $_GET['simple_sitemap_product_unavailable'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+					<div class="notice notice-warning"><p><?php esc_html_e( 'The WooCommerce Product Sitemap starter needs WooCommerce to be active.', 'simple-sitemap' ); ?></p></div>
 				<?php endif; ?>
 
 				<header class="ss-home-header">
@@ -234,7 +268,7 @@ class Settings_Welcome {
 									v<?php echo esc_html( $this->plugin_data['Version'] ); ?>
 									<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'simple-sitemap' ); ?></span>
 								</a>
-								<span class="ss-home-badge"><?php echo $is_premium ? esc_html__( 'Pro', 'simple-sitemap' ) : esc_html__( 'Free', 'simple-sitemap' ); ?></span>
+								<span class="ss-home-badge ss-home-badge--<?php echo $is_premium ? 'pro' : 'free'; ?>"><?php echo $is_premium ? esc_html__( 'Pro', 'simple-sitemap' ) : esc_html__( 'Free', 'simple-sitemap' ); ?></span>
 							</div>
 						</div>
 					</div>
@@ -242,7 +276,7 @@ class Settings_Welcome {
 						<span class="ss-home-feedback__icon dashicons dashicons-format-chat" aria-hidden="true"></span>
 						<span class="ss-home-feedback__copy">
 							<strong><?php esc_html_e( 'Help us improve Simple Sitemap', 'simple-sitemap' ); ?></strong>
-							<span><?php esc_html_e( 'How can we make it better for you?', 'simple-sitemap' ); ?></span>
+							<span><?php esc_html_e( 'Share your feedback and suggestions.', 'simple-sitemap' ); ?></span>
 						</span>
 						<a class="button ss-home-feedback__button" href="<?php echo esc_url( $this->get_feedback_url() ); ?>"><?php esc_html_e( 'Share feedback', 'simple-sitemap' ); ?></a>
 					</aside>
@@ -253,13 +287,13 @@ class Settings_Welcome {
 						<h2 id="ss-home-start-title"><?php esc_html_e( 'Start here', 'simple-sitemap' ); ?></h2>
 						<div class="ss-home-start__body">
 							<div class="ss-home-start__media">
-								<img src="<?php echo esc_url( $image_root . 'customise-sitemap.png' ); ?>" alt="<?php esc_attr_e( 'Simple Sitemap block selected in the WordPress editor with its settings visible.', 'simple-sitemap' ); ?>" />
+								<img src="<?php echo esc_url( $image_root . 'customise-sitemap.png' ); ?>" alt="<?php esc_attr_e( 'A populated Simple Sitemap block in the WordPress editor.', 'simple-sitemap' ); ?>" />
 							</div>
 							<div class="ss-home-start__content">
 								<h3><?php esc_html_e( 'Create your sitemap page', 'simple-sitemap' ); ?></h3>
 								<p><?php esc_html_e( 'We’ll add a ready-to-edit sitemap block to a new draft Page. Choose the content, review the preview, and publish only when you’re happy.', 'simple-sitemap' ); ?></p>
 								<a class="button button-primary button-hero" href="<?php echo esc_url( $this->get_create_page_url( 'posts-pages' ) ); ?>"><?php esc_html_e( 'Create sitemap page', 'simple-sitemap' ); ?></a>
-								<p class="ss-home-reassurance"><span class="dashicons dashicons-lock" aria-hidden="true"></span><?php esc_html_e( 'Creates a draft — nothing is published automatically.', 'simple-sitemap' ); ?></p>
+								<p class="ss-home-starter-hint"><?php esc_html_e( 'Or choose a ready-made sitemap starter below.', 'simple-sitemap' ); ?></p>
 							</div>
 						</div>
 					</section>
@@ -304,10 +338,13 @@ class Settings_Welcome {
 					<div class="ss-home-action-grid">
 						<?php foreach ( $feature_actions as $feature_action ) : ?>
 							<article class="ss-home-action-card">
+								<?php if ( ! $is_premium ) : ?>
+									<span class="ss-home-action-edition ss-home-action-edition--free"><?php esc_html_e( 'Free', 'simple-sitemap' ); ?></span>
+								<?php endif; ?>
 								<div class="ss-home-action-icon"><span class="dashicons dashicons-<?php echo esc_attr( $feature_action['icon'] ); ?>" aria-hidden="true"></span></div>
 								<h3><?php echo esc_html( $feature_action['title'] ); ?></h3>
 								<p><?php echo esc_html( $feature_action['description'] ); ?></p>
-								<div class="ss-home-action-footer"><span><span class="dashicons dashicons-<?php echo esc_attr( $feature_action['meta_icon'] ); ?>" aria-hidden="true"></span><?php echo esc_html( $feature_action['meta'] ); ?></span><a class="button" href="<?php echo esc_url( $feature_action['url'] ); ?>"><?php echo esc_html( $feature_action['action'] ); ?></a></div>
+								<div class="ss-home-action-footer ss-home-action-footer--create"><a class="button" href="<?php echo esc_url( $feature_action['url'] ); ?>"><?php echo esc_html( $feature_action['action'] ); ?></a></div>
 							</article>
 						<?php endforeach; ?>
 					</div>
@@ -316,17 +353,17 @@ class Settings_Welcome {
 				<?php if ( ! $is_premium ) : ?>
 					<section class="ss-home-section ss-home-pro-showcase" aria-labelledby="ss-home-pro-title">
 						<div class="ss-home-section-heading">
-							<div><span class="ss-home-eyebrow ss-home-eyebrow--pro"><?php esc_html_e( 'Live Pro examples', 'simple-sitemap' ); ?></span><h2 id="ss-home-pro-title"><?php esc_html_e( 'See what you can do with Pro', 'simple-sitemap' ); ?></h2><p><?php esc_html_e( 'These cards open the live demo in a new tab for an instant, no-commitment look.', 'simple-sitemap' ); ?></p></div>
+							<div><span class="ss-home-eyebrow ss-home-eyebrow--pro"><?php esc_html_e( 'Available in Pro', 'simple-sitemap' ); ?></span><h2 id="ss-home-pro-title"><?php esc_html_e( 'Do more with Pro', 'simple-sitemap' ); ?></h2><p><?php esc_html_e( 'Unlock specialist sitemap types and create a ready-to-edit starter Page for each one.', 'simple-sitemap' ); ?></p></div>
 						</div>
 						<div class="ss-home-pro-grid">
 							<?php foreach ( $specialist_features as $specialist_feature ) : ?>
 								<article class="ss-home-action-card ss-home-action-card--pro">
+									<span class="ss-home-action-edition ss-home-action-edition--pro"><?php esc_html_e( 'Pro', 'simple-sitemap' ); ?></span>
 									<div class="ss-home-action-icon ss-home-action-icon--pro"><span class="dashicons dashicons-<?php echo esc_attr( $specialist_feature['icon'] ); ?>" aria-hidden="true"></span></div>
 									<h3><?php echo esc_html( $specialist_feature['title'] ); ?></h3>
 									<p><?php echo esc_html( $specialist_feature['description'] ); ?></p>
-									<div class="ss-home-action-footer ss-home-action-footer--pro">
-										<span><span class="dashicons dashicons-visibility" aria-hidden="true"></span><?php esc_html_e( 'Opens live demo', 'simple-sitemap' ); ?></span>
-										<a class="button" href="<?php echo esc_url( $specialist_feature['demo_url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View live demo', 'simple-sitemap' ); ?> <span aria-hidden="true">↗</span><span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'simple-sitemap' ); ?></span></a>
+									<div class="ss-home-action-footer ss-home-action-footer--pro ss-home-action-footer--create">
+										<a class="button" href="<?php echo esc_url( $this->freemius_discount_upgrade_url ); ?>"><?php esc_html_e( 'Explore Pro', 'simple-sitemap' ); ?></a>
 									</div>
 								</article>
 							<?php endforeach; ?>
@@ -343,6 +380,28 @@ class Settings_Welcome {
 						<div class="ss-home-upgrade-actions"><a class="button button-primary" href="<?php echo esc_url( $this->freemius_discount_upgrade_url ); ?>"><?php esc_html_e( 'Explore Pro', 'simple-sitemap' ); ?></a><a class="ss-home-upgrade-demo" href="<?php echo esc_url( $this->get_demo_url( 'pro-overview' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View Pro demo', 'simple-sitemap' ); ?> <span aria-hidden="true">↗</span><span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'simple-sitemap' ); ?></span></a></div>
 					</section>
 				<?php endif; ?>
+
+				<section class="ss-home-section ss-home-companions" aria-labelledby="ss-home-companions-title">
+					<div class="ss-home-section-heading">
+						<div>
+							<span class="ss-home-eyebrow"><?php esc_html_e( 'More from WPGO Plugins', 'simple-sitemap' ); ?></span>
+							<h2 id="ss-home-companions-title"><?php esc_html_e( 'Turn useful content into clearer charts and tables', 'simple-sitemap' ); ?></h2>
+							<p><?php esc_html_e( 'When a sitemap leads visitors to data-heavy content, these companion plugins help present the next step clearly inside WordPress.', 'simple-sitemap' ); ?></p>
+						</div>
+					</div>
+					<div class="ss-home-companion-grid">
+						<?php foreach ( $companion_plugins as $companion_plugin ) : ?>
+							<article class="ss-home-companion-card">
+								<div class="ss-home-companion-icon"><span class="dashicons dashicons-<?php echo esc_attr( $companion_plugin['icon'] ); ?>" aria-hidden="true"></span></div>
+								<div class="ss-home-companion-copy">
+									<h3><?php echo esc_html( $companion_plugin['title'] ); ?></h3>
+									<p><?php echo esc_html( $companion_plugin['description'] ); ?></p>
+								</div>
+								<a class="button" href="<?php echo esc_url( $companion_plugin['url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $companion_plugin['action'] ); ?> <span aria-hidden="true">↗</span><span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'simple-sitemap' ); ?></span></a>
+							</article>
+						<?php endforeach; ?>
+					</div>
+				</section>
 			</div>
 		</div>
 		<?php
@@ -383,7 +442,7 @@ class Settings_Welcome {
 	 * @return array<int, array{icon: string, title: string, description: string, layout: string, demo_url: string}>
 	 */
 	private function get_specialist_features() {
-		return array(
+		$features = array(
 			array(
 				'icon'        => 'screenoptions',
 				'title'       => __( 'Custom content types', 'simple-sitemap' ),
@@ -426,7 +485,81 @@ class Settings_Welcome {
 				'layout'      => 'advanced-styling',
 				'demo_url'    => $this->get_demo_url( 'advanced-styling' ),
 			),
+			array(
+				'icon'        => 'format-image',
+				'title'       => __( 'Visual content directory', 'simple-sitemap' ),
+				'description' => __( 'Combine featured images, links, and excerpts in a richer content index.', 'simple-sitemap' ),
+				'layout'      => 'visual-content',
+				'demo_url'    => $this->get_demo_url( 'visual-content' ),
+			),
+			array(
+				'icon'        => 'images-alt2',
+				'title'       => __( 'Compact child Page directory', 'simple-sitemap' ),
+				'description' => __( 'Add small thumbnails to a compact child Page hierarchy.', 'simple-sitemap' ),
+				'layout'      => 'compact-child-pages',
+				'demo_url'    => $this->get_demo_url( 'compact-child-pages' ),
+			),
+			array(
+				'icon'        => 'chart-bar',
+				'title'       => __( 'Categories with post counts', 'simple-sitemap' ),
+				'description' => __( 'Show a category hierarchy with a useful content count for each term.', 'simple-sitemap' ),
+				'layout'      => 'taxonomy-counts',
+				'demo_url'    => $this->get_demo_url( 'taxonomy-counts' ),
+			),
+			array(
+				'icon'        => 'calendar-alt',
+				'title'       => __( 'Monthly post archive', 'simple-sitemap' ),
+				'description' => __( 'Create a concise monthly archive with post counts.', 'simple-sitemap' ),
+				'layout'      => 'monthly-archive',
+				'demo_url'    => $this->get_demo_url( 'monthly-archive' ),
+			),
+			array(
+				'icon'        => 'menu-alt3',
+				'title'       => __( 'Horizontal menu sitemap', 'simple-sitemap' ),
+				'description' => __( 'Present a selected navigation menu as a compact horizontal sitemap.', 'simple-sitemap' ),
+				'layout'      => 'horizontal-menu',
+				'demo_url'    => $this->get_demo_url( 'horizontal-menu' ),
+			),
+			array(
+				'icon'        => 'category',
+				'title'       => __( 'Products by category', 'simple-sitemap' ),
+				'description' => __( 'Group WooCommerce products by category with images and prices.', 'simple-sitemap' ),
+				'layout'      => 'product-categories',
+				'demo_url'    => $this->get_demo_url( 'product-categories' ),
+			),
+			array(
+				'icon'        => 'tag',
+				'title'       => __( 'Products on sale', 'simple-sitemap' ),
+				'description' => __( 'Build a focused product index containing current offers.', 'simple-sitemap' ),
+				'layout'      => 'sale-products',
+				'demo_url'    => $this->get_demo_url( 'sale-products' ),
+			),
+			array(
+				'icon'        => 'yes-alt',
+				'title'       => __( 'In-stock products', 'simple-sitemap' ),
+				'description' => __( 'List products that are currently available to buy, with images and prices.', 'simple-sitemap' ),
+				'layout'      => 'in-stock-products',
+				'demo_url'    => $this->get_demo_url( 'in-stock-products' ),
+			),
+			array(
+				'icon'        => 'star-filled',
+				'title'       => __( 'Featured products', 'simple-sitemap' ),
+				'description' => __( 'Showcase featured products with images, prices, and stock status.', 'simple-sitemap' ),
+				'layout'      => 'featured-products',
+				'demo_url'    => $this->get_demo_url( 'featured-products' ),
+			),
 		);
+
+		return $features;
+	}
+
+	/**
+	 * Whether WooCommerce can render the Product Sitemap block.
+	 *
+	 * @return bool
+	 */
+	private function has_woocommerce() {
+		return post_type_exists( 'product' ) && function_exists( 'wc_get_product' );
 	}
 
 	/**
@@ -437,20 +570,29 @@ class Settings_Welcome {
 	 */
 	private function get_demo_url( $feature ) {
 		$anchors = array(
-			'custom-content'   => 'simple-sitemap-container-demo-project-directory',
-			'taxonomy-terms'   => 'taxonomy-terms-block',
-			'navigation-menu'  => 'navigation-menu-block',
-			'archive-links'    => 'archive-links-block',
-			'products'         => 'woocommerce-products-block',
-			'advanced-styling' => 'simple-sitemap-container-demo-horizontal-posts',
-			'pro-overview'     => 'taxonomy-terms-block',
+			'custom-content'      => 'simple-sitemap-container-demo-project-directory',
+			'taxonomy-terms'      => 'taxonomy-terms-block',
+			'navigation-menu'     => 'navigation-menu-block',
+			'archive-links'       => 'archive-links-block',
+			'products'            => 'woocommerce-products-block',
+			'advanced-styling'    => 'simple-sitemap-container-demo-horizontal-posts',
+			'visual-content'      => 'simple-sitemap-container-demo-project-directory',
+			'compact-child-pages' => 'simple-sitemap-child-shortcode',
+			'taxonomy-counts'     => 'taxonomy-terms-block',
+			'monthly-archive'     => 'archive-links-block',
+			'horizontal-menu'     => 'navigation-menu-block',
+			'product-categories'  => 'woocommerce-products-block',
+			'sale-products'       => 'woocommerce-products-block',
+			'in-stock-products'   => 'woocommerce-products-block',
+			'featured-products'   => 'woocommerce-products-block',
+			'pro-overview'        => 'taxonomy-terms-block',
 		);
 
 		if ( ! isset( $anchors[ $feature ] ) ) {
 			return self::DEMO_URL;
 		}
 
-		return self::DEMO_URL . '#' . $anchors[ $feature ];
+		return Product_Links::tracked_url( self::DEMO_URL . '#' . $anchors[ $feature ], 'home-demo-' . $feature );
 	}
 
 	/**
@@ -464,19 +606,19 @@ class Settings_Welcome {
 			array(
 				'icon'     => 'book',
 				'label'    => $is_premium ? __( 'Pro documentation', 'simple-sitemap' ) : __( 'Documentation', 'simple-sitemap' ),
-				'url'      => self::DOCUMENTATION_URL,
+				'url'      => Product_Links::tracked_url( self::DOCUMENTATION_URL, 'home-documentation' ),
 				'external' => true,
 			),
 			array(
 				'icon'     => 'visibility',
 				'label'    => $is_premium ? __( 'Pro live demo', 'simple-sitemap' ) : __( 'Live demo', 'simple-sitemap' ),
-				'url'      => self::DEMO_URL,
+				'url'      => Product_Links::tracked_url( self::DEMO_URL, 'home-live-demo' ),
 				'external' => true,
 			),
 			array(
 				'icon'     => 'media-document',
 				'label'    => $is_premium ? __( 'Pro changelog', 'simple-sitemap' ) : __( 'Changelog', 'simple-sitemap' ),
-				'url'      => self::CHANGELOG_URL,
+				'url'      => Product_Links::tracked_url( self::CHANGELOG_URL, 'home-changelog' ),
 				'external' => true,
 			),
 			array(
@@ -505,14 +647,14 @@ class Settings_Welcome {
 			return array(
 				'eyebrow'     => __( 'Your sitemap toolkit', 'simple-sitemap' ),
 				'title'       => __( 'Explore every sitemap feature', 'simple-sitemap' ),
-				'description' => __( 'Create a private starter draft for any sitemap type, then configure and preview it in the editor.', 'simple-sitemap' ),
+				'description' => __( 'Each option creates a private starter draft, not a published Page. Configure and preview it in the editor when you are ready.', 'simple-sitemap' ),
 			);
 		}
 
 		return array(
 			'eyebrow'     => __( 'Included with Free', 'simple-sitemap' ),
 			'title'       => __( 'What you can do with Free', 'simple-sitemap' ),
-			'description' => __( 'Every card below takes an action: it creates a private draft or opens the setting you need.', 'simple-sitemap' ),
+			'description' => __( 'Each sitemap option creates a private starter draft, not a published Page. The settings card opens the controls you need.', 'simple-sitemap' ),
 		);
 	}
 
@@ -593,6 +735,57 @@ class Settings_Welcome {
 				);
 				break;
 
+			case 'recent-posts':
+				$title      = __( 'Recent Posts Sitemap', 'simple-sitemap' );
+				$attributes = array(
+					'block_post_types' => wp_json_encode(
+						array(
+							array(
+								'value' => 'post',
+								'label' => __( 'Posts', 'simple-sitemap' ),
+							),
+						)
+					),
+					'orderby'          => 'date',
+					'order'            => 'desc',
+				);
+				break;
+
+			case 'page-summaries':
+				$title      = __( 'Page Directory', 'simple-sitemap' );
+				$attributes = array(
+					'block_post_types' => wp_json_encode(
+						array(
+							array(
+								'value' => 'page',
+								'label' => __( 'Pages', 'simple-sitemap' ),
+							),
+						)
+					),
+					'show_excerpt'     => true,
+				);
+				break;
+
+			case 'post-summaries':
+				$title      = __( 'Post Directory', 'simple-sitemap' );
+				$attributes = array(
+					'block_post_types' => wp_json_encode(
+						array(
+							array(
+								'value' => 'post',
+								'label' => __( 'Posts', 'simple-sitemap' ),
+							),
+						)
+					),
+					'show_excerpt'     => true,
+				);
+				break;
+
+			case 'combined-list':
+				$title                    = __( 'Content Directory', 'simple-sitemap' );
+				$attributes['render_tab'] = false;
+				break;
+
 			case 'grouped':
 				$title      = __( 'Posts by Category', 'simple-sitemap' );
 				$block_name = 'wpgoplugins/simple-sitemap-group-block';
@@ -635,7 +828,105 @@ class Settings_Welcome {
 				break;
 
 			case 'advanced-styling':
-				$title = __( 'Styled Sitemap', 'simple-sitemap' );
+				$title      = __( 'Styled Sitemap', 'simple-sitemap' );
+				$attributes = array(
+					'block_post_types'     => $attributes['block_post_types'],
+					'horizontal'           => true,
+					'horizontal_separator' => ' · ',
+					'list_icon'            => false,
+				);
+				break;
+
+			case 'visual-content':
+				$title      = __( 'Visual Content Directory', 'simple-sitemap' );
+				$attributes = array(
+					'block_post_types' => $attributes['block_post_types'],
+					'image'            => true,
+					'image_size'       => 48,
+					'show_excerpt'     => true,
+				);
+				break;
+
+			case 'compact-child-pages':
+				$title      = __( 'Compact Child Page Directory', 'simple-sitemap' );
+				$block_name = 'wpgoplugins/simple-sitemap-child-pages-block';
+				$attributes = array(
+					'image'          => true,
+					'image_size'     => 24,
+					'spacing_preset' => 'compact',
+				);
+				break;
+
+			case 'taxonomy-counts':
+				$title      = __( 'Category Directory', 'simple-sitemap' );
+				$block_name = 'wpgoplugins/simple-sitemap-taxonomy-terms-block';
+				$attributes = array(
+					'taxonomy'   => 'category',
+					'show_count' => true,
+				);
+				break;
+
+			case 'monthly-archive':
+				$title      = __( 'Monthly Post Archive', 'simple-sitemap' );
+				$block_name = 'wpgoplugins/simple-sitemap-archive-links-block';
+				$attributes = array(
+					'source'     => 'monthly',
+					'limit'      => 12,
+					'show_count' => true,
+				);
+				break;
+
+			case 'horizontal-menu':
+				$title      = __( 'Horizontal Menu Sitemap', 'simple-sitemap' );
+				$block_name = 'wpgoplugins/simple-sitemap-navigation-menu-block';
+				$attributes = array(
+					'horizontal_separator' => ' · ',
+					'list_icon'            => false,
+				);
+				break;
+
+			case 'product-categories':
+				$title      = __( 'Products by Category', 'simple-sitemap' );
+				$block_name = 'wpgoplugins/simple-sitemap-product-block';
+				$attributes = array(
+					'layout'            => 'category',
+					'show_image'        => true,
+					'show_price'        => true,
+					'show_stock_status' => true,
+				);
+				break;
+
+			case 'sale-products':
+				$title      = __( 'Products on Sale', 'simple-sitemap' );
+				$block_name = 'wpgoplugins/simple-sitemap-product-block';
+				$attributes = array(
+					'on_sale_only'      => true,
+					'show_image'        => true,
+					'show_price'        => true,
+					'show_stock_status' => true,
+				);
+				break;
+
+			case 'in-stock-products':
+				$title      = __( 'In-stock Products', 'simple-sitemap' );
+				$block_name = 'wpgoplugins/simple-sitemap-product-block';
+				$attributes = array(
+					'stock_status'      => 'instock',
+					'show_image'        => true,
+					'show_price'        => true,
+					'show_stock_status' => true,
+				);
+				break;
+
+			case 'featured-products':
+				$title      = __( 'Featured Products', 'simple-sitemap' );
+				$block_name = 'wpgoplugins/simple-sitemap-product-block';
+				$attributes = array(
+					'featured_only'     => true,
+					'show_image'        => true,
+					'show_price'        => true,
+					'show_stock_status' => true,
+				);
 				break;
 		}
 

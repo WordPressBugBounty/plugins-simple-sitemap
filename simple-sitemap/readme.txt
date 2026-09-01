@@ -5,7 +5,7 @@ Tags: html sitemap, sitemap, responsive sitemap, seo sitemap, block
 Requires at least: 6.3
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.7.0
+Stable tag: 3.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,12 @@ from deactivating the plugin under Plugins.
 6. Display the tabbed layout on the front end.
 7. Simple Sitemap Pro adds compact horizontal sitemap layouts.
 == Changelog ==
+= 3.8.0 - September 1, 2026 =
+
+* [new] Added more ready-made Home starters for recent posts, summaries, combined content, grouped posts, and child Pages. Every starter creates a private draft.
+* [new] Added clearer editor guidance when a Content or Child Pages block has no content to preview.
+* [new] Added links to ChartQuill and TableQuill for users who also need to present data as charts or tables.
+
 = 3.7.0 - August 21, 2026 =
 
 * [new] Added global Compact, Comfortable, and Custom sitemap spacing controls, plus per-block and per-shortcode item and nested-level overrides.
@@ -150,12 +156,10 @@ from deactivating the plugin under Plugins.
 * [new] Replaced the legacy welcome screen with a professional Home dashboard, guided sitemap creation, Quick Start steps, and clear Free feature actions.
 * [new] Added direct links from Pro feature cards to matching live examples and a concise feedback prompt with a Simple Sitemap feedback summary ready to send.
 * [update] Improved sitemap spacing, hierarchy, tab presentation, link contrast, and responsive readability without changing saved content or renderer markup.
-* [update] Added deterministic documentation exports and stricter Free/Pro release-package and live-demo handoff checks.
 
 = 3.6.2 - August 11, 2026 =
 
-* [update] Removed the external WP Go Plugin Framework dependency so the plugin is now fully self-contained.
-* [update] Modernized the build, release, security, accessibility, and code-quality tooling.
+* [update] Made the plugin self-contained, with no separate framework plugin required.
 * [new] Basic include/exclude post and page ID filters are now available in the Free edition.
 * [new] Added searchable content selection and a dedicated Child Pages block.
 * [new] Added opt-in bounded linked pagination to Content and Grouped Sitemap blocks and shortcodes.
@@ -165,8 +169,7 @@ from deactivating the plugin under Plugins.
 * [fix] Restored the taxonomy upgrade prompt and corrected accessible admin/editor controls.
 * [fix] Added semantic keyboard and ARIA behavior to tabbed sitemaps without changing their saved content or server-rendered HTML.
 * [fix] Kept custom post-type labels attached to the selected post type in the editor.
-* [update] Added a native structured editor preview to the Child Pages block.
-* [update] Upgraded all blocks to Block API v3 for the current iframed editor while preserving dynamic PHP front-end rendering.
+* [update] Improved Child Pages previews and compatibility with the current block editor.
 
 = 3.6.1 - May 20, 2025 =
 
@@ -175,26 +178,25 @@ from deactivating the plugin under Plugins.
 = 3.6.0 - May 7, 2025 =
 
 * [fix] Localization issues.
-* [update] Settings page sanitization.
+* [fix] Corrected validation of saved settings.
 
 = 3.5.14 - Jun 7, 2024 =
 
 * [update] Updated plugin to be compatible with WordPress 6.5.
-* [update] Updated Freemius SDK to 2.7.2.
-* [fix] Implemented reported security fixes.
+* [fix] Included reported security fixes.
 * [fix] Fixed sitemap group block/shortcode.
 
 = 3.5.12 - Feb 19, 2024 =
 
-* [fix] Updated server-side render component.
+* [fix] Restored reliable sitemap previews in the block editor.
 
 = 3.5.11 - Feb 17, 2024 =
 
-* [fix] Lodash missing external.
+* [fix] Corrected a missing editor dependency.
 
 = 3.5.10 - July 26, 2023 =
 
-* [fix] Security related fix. Freemius SDK updated to v2.5.10.
+* [fix] Included a security update for licensing and plugin updates.
 
 = 3.5.9 - January 11, 2023 =
 
@@ -207,7 +209,6 @@ from deactivating the plugin under Plugins.
 * [fix] Enqueue error on admin widgets page.
 * [fix] Sanitize non-supported sitemap shortcode attributes.
 * [update] Sticky Post was always included when including a single post in a sitemap shortcode or block.
-* [update] Add PHP docblock @return comments to functions & class methods future.
 
 = 3.5.7 - July 15, 2022 =
 
@@ -218,27 +219,23 @@ from deactivating the plugin under Plugins.
 
 * You can now override the dynamically generated sitemap ID with a static ID of your choosing.
 * Block CSS is now only loaded on pages that include a sitemap block.
-* Updated Freemius SDK.
 
 = 3.5.5 - March 4, 2022 =
 
-* Security update. Fixes minor issues in the Freemius SDK (that handle licensing and plugin updates).
+* Included a security update for licensing and plugin updates.
 
 = 3.5.4 - November 23, 2021 =
 
-* Tidied up configuration files. Added .eslintignore to the list of files to auto-remove from deployed free/pro plugin versions.
 * Added new 'Random Order', 'Menu Order', and 'Comment Count' options to the sitemap block Orderby drop down.
 * Added new 'num_terms' shortcode attribute to optionally limit the number of taxonomy terms displayed.
 * Added a preview for sitemap and sitemap group blocks in the editor window.
 
 = 3.5.3 - November 6, 2021 =
 
-* Refactored plugin codebase. 
 
 = 3.5.2 - February 26, 2021 =
 
 * Fixed compatibility issue with PHP 8.0.
-* Updated plugin to use PHP namespaces.
 
 = 3.5.1 - August 29, 2020 =
 
@@ -270,34 +267,15 @@ from deactivating the plugin under Plugins.
 * Tab support added to sitemaps!
 * New plugin options available via settings page.
 
-= 3.0 - April 26, 2019 =
-
-* Updated settings page styles.
-
-= 2.9 - April 2, 2019 =
-
-* Updated settings page info.
-* Plugin readme updated.
-
-= 2.8 - March 14, 2019 =
-
-* Updated settings page info.
-
 = 2.7 - March 6, 2019 =
 
 * Added link to sitemap plugin settings page directly from main plugin index page.
-* Removed redundant .bak file.
-* Plugin settings page information updated.
 * Removed redirect to settings page after activation.
 * Removed admin notice popup displayed after activation.
 
 = 2.6 - September 21, 2018 =
 
 * Fixed bug with [simple-sitemap-group] shortcode. Was previously buffering output twice causing display issues.
-
-= 2.5 - JUNE 19, 2018 =
-
-* Settings page updated.
 
 = 2.4 - OCTOBER 9, 2017 =
 
@@ -306,42 +284,16 @@ from deactivating the plugin under Plugins.
 = 2.3 - SEPTEMBER 25, 2017 =
 
 * New 'container_tag' shortcode attribute added to all shortcodes to output the sitemap as an ordered list, or unordered list. See plugin settings page for more information.
-* Updated plugin readme.txt.
-* Settings page updated to include better shortcode information including the new <code>[simple-sitemap-group]</code> shortcode.
-* Plugin code overhauled and refactored for future maintainability.
+* Added clearer shortcode information for the new <code>[simple-sitemap-group]</code> shortcode.
 * Improved shortcode attribute validation checks.
-
-*2.2*
-
-* Plugin settings page updated.
 
 *2.1*
 
 * Fixed broken image links on plugin settings page.
 
-*2.0*
-
-* Plugin settings page updated.
-
 *1.9 update*
 
 * Fixed compatibility bug with WordPress 4.7.
-
-*1.87 update*
-
-* Update plugin setting links.
-
-*1.86 update*
-
-* Added links to 'Pro' version.
-
-*1.85 update*
-
-* Updated plugin description.
-
-*1.84 update*
-
-* Updated information about the Pro version of the plugin.
 
 *1.83 update*
 
@@ -352,10 +304,6 @@ from deactivating the plugin under Plugins.
 * Better security.
 * Fix: Some pretty permalinks weren't being displayed properly for posts.
 
-*1.81 update*
-
-* Screenshots updated.
-
 *1.8 update*
 
 * Plugin completely rewritten to include a range of shortcode attributes to make rendering the sitemap much more flexible!
@@ -365,14 +313,6 @@ from deactivating the plugin under Plugins.
 *1.7 update*
 
 * Translation support added!
-
-*1.65 update*
-
-* More settings page updates.
-
-*1.64 update*
-
-* Settings page updated.
 
 *1.63*
 
@@ -403,15 +343,9 @@ from deactivating the plugin under Plugins.
 
 *1.52*
 
-* Updated Plugin options page text.
 * Now works nicely in sidebars (via a Text widget)!
 * Fixed bug where existing Plugin users saw no posts/pages on the sitemap after upgrade to 1.51.
 * Added a 'Settings' link to the main Plugins page, next to the 'Deactivate' link to allow easy navigation to the Simple Sitemap Plugin options page.
-
-*1.51*
-
-* Updated WordPress compatibility version.
-* Update to Plugin option page text.
 
 *1.5*
 
@@ -420,10 +354,6 @@ from deactivating the plugin under Plugins.
 * ALL Plugin styles affecting the sitemap have been removed to allow the current theme to control the styles. This enables the sitemap to blend in with the current theme, and allows for easy customisation of the CSS as there are plenty of sitemap classes to hook into.
 * All sitemap content is now listed in a single column to allow for additional listings for CPT to be added later.
 * New Plugin options to show/hide posts or pages.
-
-*1.4.1*
-
-* Minor updates to Plugin options page, and some internal functions.
 
 *1.4*
 
@@ -453,7 +383,6 @@ from deactivating the plugin under Plugins.
 *1.25*
 
 * Now supports WordPress 3.0.3
-* Updated Plugin options page
 * Fixed issue: http://wordpress.org/support/topic/plugin-simple-sitemap-duplicated-id-post_item
 * Fixed issue: http://wordpress.org/support/topic/plugin-simple-sitemap-empty-span-when-post-is-not-sticky
 

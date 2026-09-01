@@ -3,6 +3,46 @@
 		"type": "new",
 		"license": "free",
 		"banner_url": "block-preview.png",
+		"version": "3.8.0",
+		"date": "1st September 2026",
+		"title": "More Ready-made Sitemap Starters",
+		"description": "<p style='margin:15px 0;'>Create private starter drafts for recent posts, summaries, combined content, grouped posts, child Pages, and other common sitemap layouts. Nothing is published automatically.</p>",
+		"learn_more_url": "https://wpgoplugins.com/documentation/simple-sitemap/"
+	},
+	{
+		"type": "new",
+		"license": "pro",
+		"banner_url": "optionally-exclude-child-pages.png",
+		"version": "3.8.0",
+		"date": "1st September 2026",
+		"title": "More Precise Content Directories",
+		"description": "<p style='margin:15px 0;'>Choose a specific term in Grouped Sitemap, apply different query and sorting rules to each tab, and optionally respect SEO noindex and current-language rules.</p>",
+		"learn_more_url": "https://wpgoplugins.com/documentation/simple-sitemap/reference/"
+	},
+	{
+		"type": "new",
+		"license": "pro",
+		"banner_url": "block-preview.png",
+		"version": "3.8.0",
+		"date": "1st September 2026",
+		"title": "WooCommerce Product Directories",
+		"description": "<p style='margin:15px 0;'>Build product sitemaps by category, sale status, stock status, or featured status, with optional images, prices, descriptions, SKUs, and stock labels.</p>",
+		"learn_more_url": "https://demo.wpgoplugins.com/simple-sitemap/#woocommerce-products-block"
+	},
+	{
+		"type": "fix",
+		"license": "pro",
+		"banner_url": "optionally-exclude-child-pages.png",
+		"version": "3.8.0",
+		"date": "1st September 2026",
+		"title": "Consistent Child Page Thumbnails",
+		"description": "<p style='margin:15px 0;'>Child Pages thumbnails now use exact square frames without stretching, including older non-square images and themes with broad featured-image styles.</p>",
+		"learn_more_url": "https://demo.wpgoplugins.com/simple-sitemap/#child-pages-shortcode"
+	},
+	{
+		"type": "new",
+		"license": "free",
+		"banner_url": "block-preview.png",
 		"version": "3.7.0",
 		"date": "21st August 2026",
 		"title": "Consistent Sitemap Spacing",

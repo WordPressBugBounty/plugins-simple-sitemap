@@ -46,10 +46,11 @@ class Sitemap_Styles {
 	 * Blank global and instance values return no markup, preserving existing
 	 * output and theme styling until a site owner opts into the new controls.
 	 *
-	 * @param array<string, mixed> $attributes Sitemap attributes.
+	 * @param array<string, mixed>  $attributes Sitemap attributes.
+	 * @param array<string, string> $custom_properties Additional scoped custom properties.
 	 * @return string
 	 */
-	public static function style_attribute( $attributes ) {
+	public static function style_attribute( $attributes, $custom_properties = array() ) {
 		$values = self::resolve( $attributes );
 		$styles = array();
 
@@ -58,6 +59,15 @@ class Sitemap_Styles {
 		}
 		if ( '' !== $values['nested_spacing'] ) {
 			$styles[] = '--simple-sitemap-nested-spacing:' . $values['nested_spacing'];
+		}
+		foreach ( $custom_properties as $property => $value ) {
+			if ( 1 !== preg_match( '/^--[a-z0-9-]+$/', (string) $property ) ) {
+				continue;
+			}
+			$value = Utility::sanitize_css_value( 'width', $value );
+			if ( '' !== $value ) {
+				$styles[] = $property . ':' . $value;
+			}
 		}
 
 		return $styles ? ' style="' . esc_attr( implode( ';', $styles ) ) . '"' : '';
@@ -70,9 +80,8 @@ class Sitemap_Styles {
 	 * @return array{item_spacing: string, nested_spacing: string}
 	 */
 	public static function resolve( $attributes ) {
-		$attributes = is_array( $attributes ) ? $attributes : array();
-		$options    = Settings_Repository::get_options();
-		$resolved   = self::resolve_source(
+		$options  = Settings_Repository::get_options();
+		$resolved = self::resolve_source(
 			isset( $options['sitemap_spacing_preset'] ) ? $options['sitemap_spacing_preset'] : 'inherit',
 			isset( $options['sitemap_item_spacing'] ) ? $options['sitemap_item_spacing'] : '',
 			isset( $options['sitemap_nested_spacing'] ) ? $options['sitemap_nested_spacing'] : ''

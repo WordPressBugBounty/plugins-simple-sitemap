@@ -128,8 +128,8 @@ class Settings_New_Features {
 		?>
 		<div class="wrap welcome new-features<?php echo esc_attr( $tab_classes ); ?>">
 		<div class="wpgo-settings-inner">
-			<h1 class="heading"><?php esc_html_e( 'Simple Sitemap New Features & Updates!', 'simple-sitemap' ); ?></h1>
-			<p style="font-size:18px;">Features added in recent releases will appear here, ordered by the date first implemented. If you'd like to be notified of all plugin changes as soon as they're available then please <a href="https://us4.list-manage.com/subscribe?u=7ac9d1df68c71b93569502c5c&id=e4929d34d7" target="_blank">signup to our newsletter</a>. And if you have any suggestions for new features you'd like to see added to the plugin then why not <a href="<?php echo esc_url( $this->custom_plugin_data->contact_us_url ); ?>">drop us a line</a>? We always like to hear feedback from our users. Tell us what's on your mind!</p>
+			<h1 class="heading"><?php esc_html_e( 'What’s new in Simple Sitemap', 'simple-sitemap' ); ?></h1>
+			<p style="font-size:18px;"><?php esc_html_e( 'See the features and improvements added in recent releases. For the complete release history, open the changelog. If you have an idea or a problem to solve, send it through Contact Us.', 'simple-sitemap' ); ?></p>
 		<?php
 		echo wp_kses_post( $this->render_new_features( $is_premium ) );
 		?>
@@ -199,7 +199,7 @@ class Settings_New_Features {
 						<?php if ( '' !== $learn_more || $show_upgrade ) : ?>
 							<div class="permalink">
 								<?php if ( '' !== $learn_more ) : ?>
-									<a class="button left" href="<?php echo esc_url( $learn_more ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Learn more', 'simple-sitemap' ); ?></a>
+									<a class="button left" href="<?php echo esc_url( Product_Links::tracked_url( $learn_more, 'new-features-learn-more' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Learn more', 'simple-sitemap' ); ?></a>
 								<?php endif; ?>
 								<?php if ( $show_upgrade ) : ?>
 									<a class="button right" href="<?php echo esc_url( $this->freemius_discount_upgrade_url ); ?>"><?php esc_html_e( 'Upgrade', 'simple-sitemap' ); ?></a>

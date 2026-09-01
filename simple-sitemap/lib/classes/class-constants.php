@@ -85,7 +85,9 @@ class Constants {
 		$root = $this->module_roots['dir'];
 
 		// Store plugin premium status in variable.
-		$this->is_premium = ss_fs()->can_use_premium_code();
+		// The admin edition follows the active entitlement, not merely the
+		// premium package installed on the site.
+		$this->is_premium = ss_fs()->can_use_premium_code__premium_only();
 
 		if ( 'sub' === $this->menu_type ) {
 			$this->parent_slug        = 'options-general.php';
