@@ -52,6 +52,40 @@ class BootStrap {
         ss_fs()->add_filter( 'show_deactivation_feedback_form', function () {
             return false;
         } );
+        // Show the amount charged each year rather than a monthly equivalent.
+        ss_fs()->add_filter( 'pricing/show_annual_in_monthly', '__return_false' );
+        require_once $root . 'lib/classes/class-simple-sitemap-introductory-pricing.php';
+        /* translators: %s: regular annual renewal price. */
+        $renews_label = __( 'Renews at %s/year.', 'simple-sitemap' );
+        \Simple_Sitemap_Introductory_Pricing::register( array(
+            'page'        => 'simple-sitemap-menu-pricing',
+            'handle'      => 'wpgo-simple-sitemap-introductory-pricing',
+            'plugin_file' => $this->module_roots['file'],
+            'script'      => 'lib/assets/js/wpgo-introductory-pricing.js',
+            'style'       => 'lib/assets/css/wpgo-introductory-pricing.css',
+            'version'     => $plugin_data['Version'],
+            'tiers'       => array(
+                '1'  => array(
+                    'firstYear' => '$29',
+                    'renewal'   => '$39',
+                    'coupon'    => 'SS1SITE10',
+                ),
+                '3'  => array(
+                    'firstYear' => '$59',
+                    'renewal'   => '$79',
+                    'coupon'    => 'SS3SITE20',
+                ),
+                '25' => array(
+                    'firstYear' => '$109',
+                    'renewal'   => '$129',
+                    'coupon'    => 'SS25SITE20',
+                ),
+            ),
+            'labels'      => array(
+                'firstYear' => __( 'First year', 'simple-sitemap' ),
+                'renews'    => $renews_label,
+            ),
+        ) );
         // Enqueue plugin scripts.
         require_once $root . 'lib/classes/enqueue-scripts.php';
         new Enqueue_Scripts(

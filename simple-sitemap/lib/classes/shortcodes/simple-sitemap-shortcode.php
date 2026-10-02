@@ -234,8 +234,11 @@ class Simple_Sitemap_Shortcode {
 
 		$sitemap_unique_id = 'simple-sitemap-container-' . $args['id'];
 		$container_classes = 'simple-sitemap-container simple-sitemap-spacing-root ' . $sitemap_unique_id . $render_class . $container_format_class;
+		$container_classes = apply_filters( '_simple_sitemap_container_classes', $container_classes, $args );
 
-		$sitemap .= '<div id="' . esc_attr( $sitemap_unique_id ) . '" class="' . esc_attr( $container_classes ) . '"' . Sitemap_Styles::style_attribute( $args ) . '>';
+		$sitemap       .= '<div id="' . esc_attr( $sitemap_unique_id ) . '" class="' . esc_attr( $container_classes ) . '"' . Sitemap_Styles::style_attribute( $args ) . '>';
+		$before_content = apply_filters( '_simple_sitemap_before_content', '', $args, $sitemap_unique_id );
+		$sitemap       .= is_string( $before_content ) ? wp_kses( $before_content, self::before_content_allowed_html() ) : '';
 
 		// Conditionally output tab headers.
 		if ( 'tab' === $args['render'] ) :
@@ -331,6 +334,41 @@ class Simple_Sitemap_Shortcode {
 		// ****************
 
 		return $sitemap;
+	}
+
+	/**
+	 * Allowed markup for progressively enhanced controls before sitemap content.
+	 *
+	 * @return array<string, array<string, bool>>
+	 */
+	private static function before_content_allowed_html() {
+		return array(
+			'div'    => array(
+				'class'  => true,
+				'hidden' => true,
+			),
+			'label'  => array( 'for' => true ),
+			'input'  => array(
+				'id'               => true,
+				'class'            => true,
+				'type'             => true,
+				'autocomplete'     => true,
+				'aria-controls'    => true,
+				'aria-describedby' => true,
+				'placeholder'      => true,
+				'data-no-results'  => true,
+			),
+			'button' => array(
+				'class'  => true,
+				'type'   => true,
+				'hidden' => true,
+			),
+			'p'      => array(
+				'id'        => true,
+				'class'     => true,
+				'aria-live' => true,
+			),
+		);
 	}
 
 	/**

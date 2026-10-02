@@ -65,6 +65,8 @@ class Attribute_Schema {
 		'tab_color'                 => '#ffffff',
 		'respect_noindex'           => false,
 		'current_language_only'     => false,
+		'search'                    => false,
+		'search_placeholder'        => '',
 	);
 
 	/**
@@ -115,6 +117,8 @@ class Attribute_Schema {
 		'sitemap_container_margin'  => '',
 		'respect_noindex'           => false,
 		'current_language_only'     => false,
+		'search'                    => false,
+		'search_placeholder'        => '',
 	);
 
 	/**
@@ -434,6 +438,8 @@ class Attribute_Schema {
 					'tab_color'                 => 'string',
 					'respect_noindex'           => 'boolean',
 					'current_language_only'     => 'boolean',
+					'search'                    => 'boolean',
+					'search_placeholder'        => 'string',
 					'section_settings'          => 'object',
 				)
 			);
@@ -509,6 +515,8 @@ class Attribute_Schema {
 					'sitemap_container_margin'  => 'string',
 					'respect_noindex'           => 'boolean',
 					'current_language_only'     => 'boolean',
+					'search'                    => 'boolean',
+					'search_placeholder'        => 'string',
 				)
 			);
 		}

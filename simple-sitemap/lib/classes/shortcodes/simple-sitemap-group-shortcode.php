@@ -73,7 +73,7 @@ class Simple_Sitemap_Group_Shortcode {
 	public function render_block( $attributes ) {
 		// manually set this to true as we're rendering a block
 		$attributes['gutenberg_block'] = true;
-		return wp_kses_post( $this->render( $attributes ) );
+		return wp_kses( $this->render( $attributes ), self::output_allowed_html() );
 	}
 
 	/**
@@ -91,7 +91,7 @@ class Simple_Sitemap_Group_Shortcode {
 			$attributes = array_map( 'sanitize_text_field', wp_unslash( $attributes ) );
 		}
 		$attributes['gutenberg_block'] = false;
-		return wp_kses_post( $this->render( $attributes ) );
+		return wp_kses( $this->render( $attributes ), self::output_allowed_html() );
 	}
 
 	/**
@@ -194,8 +194,11 @@ class Simple_Sitemap_Group_Shortcode {
 
 		$sitemap_unique_id = 'simple-sitemap-container-' . $args['id'];
 		$container_classes = 'simple-sitemap-container simple-sitemap-spacing-root ' . $sitemap_unique_id . $render_class . $container_format_class;
+		$container_classes = apply_filters( '_simple_sitemap_group_container_classes', $container_classes, $args );
 
-		$sitemap .= '<div id="' . esc_attr( $sitemap_unique_id ) . '" class="' . esc_attr( $container_classes ) . '"' . Sitemap_Styles::style_attribute( $args ) . '>';
+		$sitemap       .= '<div id="' . esc_attr( $sitemap_unique_id ) . '" class="' . esc_attr( $container_classes ) . '"' . Sitemap_Styles::style_attribute( $args ) . '>';
+		$before_content = apply_filters( '_simple_sitemap_group_before_content', '', $args, $sitemap_unique_id );
+		$sitemap       .= is_string( $before_content ) ? wp_kses( $before_content, self::before_content_allowed_html() ) : '';
 
 		// Set opening and closing title tag.
 		if ( ! empty( $args['title_tag'] ) ) {
@@ -278,5 +281,52 @@ class Simple_Sitemap_Group_Shortcode {
 		// ****************
 
 		return $sitemap;
+	}
+
+	/**
+	 * Allowed markup for progressively enhanced controls before sitemap content.
+	 *
+	 * @return array<string, array<string, bool>>
+	 */
+	private static function before_content_allowed_html() {
+		return array(
+			'div'    => array(
+				'class'  => true,
+				'hidden' => true,
+			),
+			'label'  => array( 'for' => true ),
+			'input'  => array(
+				'id'               => true,
+				'class'            => true,
+				'type'             => true,
+				'autocomplete'     => true,
+				'aria-controls'    => true,
+				'aria-describedby' => true,
+				'placeholder'      => true,
+				'data-no-results'  => true,
+			),
+			'button' => array(
+				'class'  => true,
+				'type'   => true,
+				'hidden' => true,
+			),
+			'p'      => array(
+				'id'        => true,
+				'class'     => true,
+				'aria-live' => true,
+			),
+		);
+	}
+
+	/**
+	 * Retain the established post markup plus the progressive search field.
+	 *
+	 * @return array<string, array<string, bool>>
+	 */
+	private static function output_allowed_html() {
+		$allowed          = wp_kses_allowed_html( 'post' );
+		$allowed['input'] = self::before_content_allowed_html()['input'];
+
+		return $allowed;
 	}
 }

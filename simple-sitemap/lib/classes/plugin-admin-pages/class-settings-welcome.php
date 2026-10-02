@@ -192,6 +192,13 @@ class Settings_Welcome {
 				'action'      => __( 'Create draft', 'simple-sitemap' ),
 			),
 			array(
+				'icon'        => 'welcome-view-site',
+				'title'       => __( 'Paginated posts', 'simple-sitemap' ),
+				'description' => __( 'Split a long posts sitemap into smaller pages that are easier to browse.', 'simple-sitemap' ),
+				'url'         => $this->get_create_page_url( 'paginated-posts' ),
+				'action'      => __( 'Create draft', 'simple-sitemap' ),
+			),
+			array(
 				'icon'        => 'editor-ul',
 				'title'       => __( 'Combined content list', 'simple-sitemap' ),
 				'description' => __( 'Show posts and Pages together in one continuous sitemap.', 'simple-sitemap' ),
@@ -444,6 +451,13 @@ class Settings_Welcome {
 	private function get_specialist_features() {
 		$features = array(
 			array(
+				'icon'        => 'search',
+				'title'       => __( 'Searchable content directory', 'simple-sitemap' ),
+				'description' => __( 'Help visitors filter the sitemap items currently displayed as they type.', 'simple-sitemap' ),
+				'layout'      => 'searchable-content',
+				'demo_url'    => $this->get_demo_url( 'searchable-content' ),
+			),
+			array(
 				'icon'        => 'screenoptions',
 				'title'       => __( 'Custom content types', 'simple-sitemap' ),
 				'description' => __( 'Include portfolios, events, documentation, and other public post types.', 'simple-sitemap' ),
@@ -570,6 +584,7 @@ class Settings_Welcome {
 	 */
 	private function get_demo_url( $feature ) {
 		$anchors = array(
+			'searchable-content'  => 'content-sitemap-block',
 			'custom-content'      => 'simple-sitemap-container-demo-project-directory',
 			'taxonomy-terms'      => 'taxonomy-terms-block',
 			'navigation-menu'     => 'navigation-menu-block',
@@ -577,7 +592,7 @@ class Settings_Welcome {
 			'products'            => 'woocommerce-products-block',
 			'advanced-styling'    => 'simple-sitemap-container-demo-horizontal-posts',
 			'visual-content'      => 'simple-sitemap-container-demo-project-directory',
-			'compact-child-pages' => 'simple-sitemap-child-shortcode',
+			'compact-child-pages' => 'child-pages-shortcode',
 			'taxonomy-counts'     => 'taxonomy-terms-block',
 			'monthly-archive'     => 'archive-links-block',
 			'horizontal-menu'     => 'navigation-menu-block',
@@ -786,6 +801,22 @@ class Settings_Welcome {
 				$attributes['render_tab'] = false;
 				break;
 
+			case 'paginated-posts':
+				$title      = __( 'Paginated Posts Sitemap', 'simple-sitemap' );
+				$attributes = array(
+					'block_post_types' => wp_json_encode(
+						array(
+							array(
+								'value' => 'post',
+								'label' => __( 'Posts', 'simple-sitemap' ),
+							),
+						)
+					),
+					'paginate'         => true,
+					'page_size'        => 25,
+				);
+				break;
+
 			case 'grouped':
 				$title      = __( 'Posts by Category', 'simple-sitemap' );
 				$block_name = 'wpgoplugins/simple-sitemap-group-block';
@@ -801,6 +832,15 @@ class Settings_Welcome {
 			case 'custom-content':
 				$title      = __( 'Custom Content Sitemap', 'simple-sitemap' );
 				$attributes = array();
+				break;
+
+			case 'searchable-content':
+				$title      = __( 'Searchable Content Directory', 'simple-sitemap' );
+				$attributes = array(
+					'block_post_types' => $attributes['block_post_types'],
+					'render_tab'       => false,
+					'search'           => true,
+				);
 				break;
 
 			case 'taxonomy-terms':

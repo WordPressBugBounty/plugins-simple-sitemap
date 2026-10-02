@@ -5,7 +5,7 @@ Tags: html sitemap, sitemap, responsive sitemap, seo sitemap, block
 Requires at least: 6.3
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.8.0
+Stable tag: 3.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,10 @@ from deactivating the plugin under Plugins.
 6. Display the tabbed layout on the front end.
 7. Simple Sitemap Pro adds compact horizontal sitemap layouts.
 == Changelog ==
+= 3.9.2 - September 30, 2026 =
+
+* [new] Added a ready-made paginated posts starter to the plugin Home screen. The starter creates a private draft for review.
+
 = 3.8.0 - September 1, 2026 =
 
 * [new] Added more ready-made Home starters for recent posts, summaries, combined content, grouped posts, and child Pages. Every starter creates a private draft.
