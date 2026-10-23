@@ -52,6 +52,9 @@ when you need more control for a larger or more structured site.
 
 Pro adds:
 
+* Optional visitor search for Content and Grouped sitemaps, using blocks or
+  shortcodes. Visitors can filter the entries currently displayed while
+  matching items retain their hierarchy or topic context.
 * Custom post types and custom taxonomies.
 * Taxonomy-term filters and automatic exclusion of child pages.
 * Advanced responsive tab controls and horizontal layouts.
@@ -70,6 +73,10 @@ Pro adds:
 
 Both editions keep the same WordPress-first workflow, so you can start with the
 free plugin and upgrade when the site requires the additional controls.
+
+[Try Pro visitor search in the live demo](https://demo.wpgoplugins.com/simple-sitemap/grouped-sitemap-block/#simple-sitemap-container-demo-grouped-search).
+When linked pagination is enabled, search filters the current result page;
+it does not search other result pages or the whole site.
 
 == Installation ==
 
@@ -102,8 +109,9 @@ Yes. The blocks provide the visual editor workflow, while the existing
 
 = What is included in Pro? =
 
-Simple Sitemap Pro adds custom post types and taxonomies, taxonomy-term and
-child-page filtering, advanced responsive and horizontal layouts, extra sitemap
+Simple Sitemap Pro adds optional visitor search, custom post types and
+taxonomies, taxonomy-term and child-page filtering, advanced responsive and
+horizontal layouts, extra sitemap
 tools, and styling controls. Basic post/page ID filtering is included in Free.
 [Compare the editions](https://wpgoplugins.com/plugins/simple-sitemap/).
 
